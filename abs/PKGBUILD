@@ -1,0 +1,30 @@
+# Maintainer: Leandro Dorileo <leandro.maciel.dorileo at intel dot com>
+
+pkgname=soletta
+pkgver=1_beta3
+pkgrel=1
+pkgdesc='Soletta project is a framework for making IoT devices. With Soletta
+library developers can easily write software for devices that control
+actuators/sensors and communicate using standard technologies. It
+enables adding smartness even on the smallest edge devices.'
+
+url='http://github.com/solettaproject/soletta'
+arch=('i686' 'x86_64')
+license=('BSD 3-Clause')
+depends=('python>=3.4' 'pcre' 'icu' 'curl')
+makedepends=('python-jsonschema')
+optdepends=('gtk3')
+
+source=("https://github.com/solettaproject/soletta/archive/v${pkgver}.tar.gz")
+sha256sums=('35f46240b22051783205dcd9174ca8419e4e05d4bee10ff409fb5ed4dab41d4b')
+
+build() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    make alldefconfig
+    make -j${nproc}
+}
+
+package() {
+    cd "${pkgname}-${pkgver}"
+    make DESTDIR="${pkgdir}" install
+}
