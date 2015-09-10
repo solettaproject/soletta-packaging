@@ -1,13 +1,13 @@
 # Maintainer: Anselmo L. S. Melo <anselmo.melo@intel.com>
 pkgname=soletta
 pkgver=1_beta3
-pkgrel=1
+pkgrel=2
 pkgdesc="Soletta Project is a framework for making IoT devices"
 arch=('any')
 url="http://github.com/solettaproject/soletta"
 license=('custom:BSD3')
-depends=()
-makedepends=('git' 'python>=3.4' 'python-jsonschema' 'chrpath')
+depends=('python>=3.4' 'python-jsonschema')
+makedepends=('git' 'python>=3.4' 'python-jsonschema')
 checkdepends=()
 optdepends=('gtk3' 'icu' 'curl' 'systemd')
 conflicts=('soletta-git')
