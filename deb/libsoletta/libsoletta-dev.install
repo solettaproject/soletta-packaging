@@ -2,3 +2,6 @@
 /build/soletta_sysroot/usr/lib/pkgconfig/soletta.pc usr/lib/pkgconfig/
 /build/soletta_sysroot/usr/bin/sol-flow-node-type-gen.py usr/bin/
 /build/soletta_sysroot/usr/bin/sol-flow-node-type-validate.py usr/bin/
+/data/schemas/config.schema usr/share/soletta/flow/schemas/
+/data/schemas/node-type-genspec.schema usr/share/soletta/flow/schemas/
+/data/schemas/uncrustify.schema usr/share/soletta/flow/schemas/
