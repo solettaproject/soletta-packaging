@@ -10,6 +10,7 @@ Group: System Environment/Libraries
 URL: http://github.com/solettaproject/soletta
 Source0: https://github.com/solettaproject/soletta/archive/v%{soletta_release}.tar.gz
 Source1: https://github.com/solettaproject/duktape-release/archive/v%{soletta_duktape_release}.tar.gz
+Source2: config
 BuildRequires: gtk3-devel
 BuildRequires: libcurl-devel
 BuildRequires: libicu-devel
@@ -511,16 +512,14 @@ using %{name}, you will need to install %{name}-devel.
 mv duktape-release-%{soletta_duktape_release}/* src/thirdparty/duktape
 
 %build
-export LIBDIR=%{_libdir}/
-make alldefconfig
-%{__make} %{?_smp_mflags}
 
 # TODO: should we generate man pages from doxygen tags?
 # %{__make} doc || :
 
 %install
-%{__rm} -rf %{buildroot}
-make DESTDIR=%{buildroot} INSTALL="install -p" CP="cp -p" install
+export LIBDIR=%{_libdir}/
+cp %{SOURCE2} .config
+%{__make} %{?_smp_mflags} DESTDIR=%{buildroot} INSTALL="install -p" CP="cp -p" install
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -546,7 +545,6 @@ make DESTDIR=%{buildroot} INSTALL="install -p" CP="cp -p" install
 %{_datadir}/soletta/flow/descriptions/aio.json
 %{_datadir}/soletta/flow/descriptions/app.json
 %{_datadir}/soletta/flow/descriptions/boolean.json
-%{_datadir}/soletta/flow/descriptions/builtins.json
 %{_datadir}/soletta/flow/descriptions/byte.json
 %{_datadir}/soletta/flow/descriptions/color.json
 %{_datadir}/soletta/flow/descriptions/console.json
@@ -763,5 +761,8 @@ make DESTDIR=%{buildroot} INSTALL="install -p" CP="cp -p" install
 %license COPYING
 
 %changelog
-* Wed Sep  11 2015 Gustavo Lima Chaves
+* Tue Sep 15 2015 Gustavo Lima Chaves
+- add pre-made config for Fedora 22
+
+* Fri Sep 11 2015 Gustavo Lima Chaves
 - first build for Fedora 22
