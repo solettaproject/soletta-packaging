@@ -496,8 +496,8 @@ This package contains the header files, static libraries and
 development documentation for %{name}. If you like to develop programs
 using %{name}, you will need to install %{name}-devel.
 
-# Docs disabled for now because the man-formatted output is even being
-# created yet
+# Docs disabled for now because the man-formatted output is not even
+# being created yet
 
 # %package -n lib%{name}-doc
 # Summary: Development documentation for %{name}
@@ -512,17 +512,16 @@ using %{name}, you will need to install %{name}-devel.
 mv duktape-release-%{soletta_duktape_release}/* src/thirdparty/duktape
 
 %build
-
+make %{?_smp_mflags}
 # TODO: should we generate man pages from doxygen tags?
-# %{__make} doc || :
+# make doc || :
 
 %install
 export LIBDIR=%{_libdir}/
 cp %{SOURCE2} .config
-%{__make} %{?_smp_mflags} DESTDIR=%{buildroot} INSTALL="install -p" CP="cp -p" install
+make %{?_smp_mflags} DESTDIR=%{buildroot} INSTALL="install -p" CP="cp -p" install
 
-%clean
-%{__rm} -rf %{buildroot}
+%{?%{name}_debug_package}
 
 %files -n lib%{name}
 %defattr(-, root, root, -)
@@ -761,6 +760,9 @@ cp %{SOURCE2} .config
 %license COPYING
 
 %changelog
+* Wed Sep 16 2015 Gustavo Lima Chaves
+- make debug package functional
+
 * Tue Sep 15 2015 Gustavo Lima Chaves
 - add pre-made config for Fedora 22
 
