@@ -424,11 +424,11 @@ run scripts from /etc/init.d or /etc/rc.d with standard parameters
 "start", "stop", "restart" and "status". To enable a service all one
 needs to do is symlink the service name to rc-d.so. As an example, to
 enable /etc/init.d/myservice to be used by linux-micro: ln -s
-/usr/lib/soletta/modules/linux-micro/rc-d.so
-/usr/lib/soletta/modules/linux-micro/myservice.so. A set of services
+%{_libdir}/soletta/modules/linux-micro/rc-d.so
+%{_libdir}/soletta/modules/linux-micro/myservice.so. A set of services
 are started automatically by Soletta in order to do initialization --
 those are listed in
-/usr/lib/soletta/modules/linux-micro/initial-services.
+%{_libdir}/soletta/modules/linux-micro/initial-services.
 
 %package -n lib%{name}-linux-micro-module-sysctl
 Summary: sysctl linux-micro module for %{name}
@@ -439,10 +439,10 @@ Requires: lib%{name}%{?_isa} = %{version}-%{release}
 This package contains the sysctl linux-micro module for %{name}. The
 module sets kernel parameters from sysctl.conf files. This service
 will mimic systemd-sysctl.service and read the settings from
-/etc/sysctl.conf or /run/sysctl.d, /etc/sysctl.d,
-/usr/local/lib/sysctl.d, /usr/lib/sysctl.d, /lib/sysctl.d. Files are
-processed in alphabetical order. See
-http://www.freedesktop.org/software/systemd/man/systemd-sysctl.service.html
+'/etc/sysctl.conf' or '/run/sysctl.d', '/etc/sysctl.d',
+'/usr/local/lib/sysctl.d', '/usr/lib/sysctl.d', '/lib/sysctl.d'. Files
+are processed in alphabetical order. See
+http://www.freedesktop.org/software/systemd/man/systemd-sysctl.service.html.
 
 %package -n lib%{name}-linux-micro-module-watchdog
 Summary: Watchdog linux-micro module for %{name}
@@ -499,16 +499,16 @@ using %{name}, you will need to install %{name}-devel.
 # Docs disabled for now because the man-formatted output is not even
 # being created yet
 
-# %package -n lib%{name}-doc
-# Summary: Development documentation for %{name}
+# %%package -n lib%%{name}-doc
+# Summary: Development documentation for %%{name}
 # Group: Documentation
 
-# %description -n lib%{name}-doc
-# This package contains the development documentation for %{name}.
+# %%description -n lib%%{name}-doc
+# This package contains the development documentation for %%{name}.
 
 %prep
-%setup -n %{name}-%{soletta_release}
-%setup -T -D -a 1 -n %{name}-%{soletta_release}
+%setup -n %{name}-%{soletta_release} -q
+%setup -T -D -a 1 -n %{name}-%{soletta_release} -q
 mv duktape-release-%{soletta_duktape_release}/* src/thirdparty/duktape
 
 %build
@@ -753,15 +753,17 @@ make %{?_smp_mflags} DESTDIR=%{buildroot} INSTALL="install -p" CP="cp -p" instal
 %{_libdir}/soletta/modules/pin-mux/intel-edison-rev-c.so
 
 # TODO: should we generate man pages from doxygen tags?
-# %files -n lib%{name}-doc
-# %defattr(-, root, root, -)
-# %doc %{_mandir}/man3/*
+
+# %%files -n lib%%{name}-doc
+# %%defattr(-, root, root, -)
+# %%doc %%{_mandir}/man3/*
 
 %license COPYING
 
 %changelog
 * Wed Sep 16 2015 Gustavo Lima Chaves
 - make debug package functional
+- make rpmlint quiet for this spec
 
 * Tue Sep 15 2015 Gustavo Lima Chaves
 - add pre-made config for Fedora 22
