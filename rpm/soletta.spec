@@ -5,7 +5,7 @@ Summary: A framework for making IoT devices
 Name: soletta
 Version: 0.0.1
 Release: v%{soletta_release}%{?dist}
-License: BSD 3-Clause
+License: BSD
 Group: System Environment/Libraries
 URL: http://github.com/solettaproject/soletta
 Source0: https://github.com/solettaproject/soletta/archive/v%{soletta_release}.tar.gz
@@ -27,9 +27,6 @@ enables adding smartness even on the smallest edge devices.
 %package -n lib%{name}
 Summary: A framework for making IoT devices
 Group: System Environment/Libraries
-Requires: pcre
-Requires: libicu
-Requires: libcurl
 
 %description -n lib%{name}
 Soletta library allows developers to easily write software for devices
@@ -105,13 +102,12 @@ provides a file node meant to read and write data to files
 Summary: Flower-power flow module for %{name}
 Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
-Requires: libcurl
 
 %description -n lib%{name}-flow-module-flower-power
 This package contains the flower-power flow module for %{name}. The
 module interfaces with Parrot Flower Power
 (http://www.parrot.com/usa/products/flower-power/), measuring and
-analysing the four elements crucial the health of plants: sunlight,
+analyzing the four elements crucial the health of plants: sunlight,
 temperature, soil moisture and fertilizer. It fetches plant data via
 HTTP, using a web service.
 
@@ -179,7 +175,6 @@ module provides a flow node for the LPD8806 led strip controller.
 Summary: Location flow module for %{name}
 Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
-Requires: libcurl
 
 %description -n lib%{name}-flow-module-location
 This package contains the location flow module for %{name}. The module
@@ -223,7 +218,7 @@ Requires: lib%{name}%{?_isa} = %{version}-%{release}
 %description -n lib%{name}-flow-module-oic
 This package contains the OIC flow module for %{name}. The module
 provides server and client flow nodes for Open Interconnect Consortium
-"brighlight" class of devices.
+"brightlight" class of devices.
 
 %package -n lib%{name}-flow-module-persistence
 Summary: Persistence flow module for %{name}
@@ -277,7 +272,6 @@ provides flow nodes that aids one to write testing/validation flows
 Summary: ThingSpeak flow module for %{name}
 Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
-Requires: libcurl
 
 %description -n lib%{name}-flow-module-thingspeak
 This package contains the ThingSpeak flow module for %{name}. The
@@ -296,7 +290,7 @@ Requires: udev
 %description -n lib%{name}-flow-module-udev
 This package contains the udev flow module for %{name}. The module
 provides a udev flow node that outputs boolean packets after a devices
-are attached or dettached on the system.
+are attached or detached on the system.
 
 %package -n lib%{name}-flow-module-unix-socket
 Summary: Unix-socket flow module for %{name}
@@ -309,14 +303,14 @@ module provides I/O flow nodes that aid on isolating flows by means of
 unix sockets.
 
 %package -n lib%{name}-flow-metatype-module-js
-Summary: Javascript flow metatype module for %{name}
+Summary: JavaScript flow metatype module for %{name}
 Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-metatype-module-js
-This package contains the javascript flow metatype module for %{name}.
-The module a javascript metatype for flows, i. e., the possibility of
-declaring new node types with the behaviour implemented in that
+This package contains the JavaScript flow metatype module for %{name}.
+The module a JavaScript metatype for flows, i. e., the possibility of
+declaring new node types with the behavior implemented in that
 language, directly in .fbp files.
 
 %package -n lib%{name}-linux-micro-module-bluetooth
@@ -336,7 +330,7 @@ Requires: lib%{name}%{?_isa} = %{version}-%{release}
 %description -n lib%{name}-linux-micro-module-console
 This package contains the console linux-micro module for %{name}. The
 module spawns agetty (or getty or /bin/sh) on consoles defined by
-kernel, respawning as they exit. This service is useful during
+kernel, re-spawning as they exit. This service is useful during
 development or for devices that should allow maintenance access by a
 serial console. The consoles are defined by the kernel as it reads the
 kernel command line for "console=XXX" statements, see
@@ -353,17 +347,17 @@ This package contains the D-Bus linux-micro module for %{name}. The
 module controls the D-Bus daemon in the system.
 
 %package -n lib%{name}-linux-micro-module-fstab
-Summary: fstab linux-micro module for %{name}
+Summary: The fstab linux-micro module for %{name}
 Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-linux-micro-module-fstab
 This package contains the fstab linux-micro module for %{name}. The
-module will mount filesystems in /etc/fstab. This is a simple
-implementation that will mount entries, however no filesystem check
-(fsck) is done. Moreover, the fifth and sixth fields (fs_freq and
-fs_passno) are not used. The file /etc/fstab is optional, if it
-doesn not exist the service starts but nothing is mounted.
+module will mount file systems in /etc/fstab. This is a simple
+implementation that will mount entries, however no file system check
+(fsck) is done. Moreover, the fifth and sixth fields ('fs_freq' and
+'fs_passno') are not used. The file /etc/fstab is optional, if it
+does not exist the service starts but nothing is mounted.
 
 %package -n lib%{name}-linux-micro-module-hostname
 Summary: Hostname linux-micro module for %{name}
@@ -413,7 +407,7 @@ assigned based on the MAC address. This service relies on netlink
 communication with the kernel.
 
 %package -n lib%{name}-linux-micro-module-rc-d
-Summary: rc-d linux-micro module for %{name}
+Summary: The rc-d linux-micro module for %{name}
 Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
@@ -431,7 +425,7 @@ those are listed in
 %{_libdir}/soletta/modules/linux-micro/initial-services.
 
 %package -n lib%{name}-linux-micro-module-sysctl
-Summary: sysctl linux-micro module for %{name}
+Summary: The sysctl linux-micro module for %{name}
 Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
@@ -525,13 +519,15 @@ make %{?_smp_mflags} DESTDIR=%{buildroot} INSTALL="install -p" CP="cp -p" instal
 
 %files -n lib%{name}
 %defattr(-, root, root, -)
-%{_libdir}/*.so*
+%{_libdir}/libsoletta.so.0
+%{_libdir}/libsoletta.so.0.0.1
 %{_bindir}/sol-fbp-runner
 %{_datadir}/soletta/board_detect.json
 %{_libdir}/soletta/modules/linux-micro/initial-services
 
 %files -n lib%{name}-devel
 %defattr(-, root, root, -)
+%{_libdir}/libsoletta.so
 %{_bindir}/sol-fbp-generator
 %{_bindir}/sol-fbp-to-dot
 %{_bindir}/sol-flow-node-type-gen.py
@@ -761,6 +757,9 @@ make %{?_smp_mflags} DESTDIR=%{buildroot} INSTALL="install -p" CP="cp -p" instal
 %license COPYING
 
 %changelog
+* Thu Sep 17 2015 Gustavo Lima Chaves
+- make rpmlint quiet for the generated RPMs
+
 * Wed Sep 16 2015 Gustavo Lima Chaves
 - make debug package functional
 - make rpmlint quiet for this spec
