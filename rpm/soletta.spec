@@ -1,15 +1,19 @@
-%define soletta_release 1_beta4
-%define soletta_duktape_release 1_beta2
+%define soletta_major 0
+%define soletta_minor 0
+%define soletta_build 1
+%define soletta_release beta4
+
+%define soletta_duktape_release beta2
 
 Summary: A framework for making IoT devices
 Name: soletta
-Version: 0.0.1
-Release: v%{soletta_release}%{?dist}
+Version: %{soletta_major}.%{soletta_minor}.%{soletta_build}
+Release: %{soletta_release}%{?dist}
 License: BSD
 Group: System Environment/Libraries
 URL: http://github.com/solettaproject/soletta
-Source0: https://github.com/solettaproject/soletta/archive/v%{soletta_release}.tar.gz
-Source1: https://github.com/solettaproject/duktape-release/archive/v%{soletta_duktape_release}.tar.gz
+Source0: https://github.com/solettaproject/soletta/archive/v1_%{soletta_release}.tar.gz
+Source1: https://github.com/solettaproject/duktape-release/archive/v1_%{soletta_duktape_release}.tar.gz
 Source2: config
 BuildRequires: gtk3-devel
 BuildRequires: libcurl-devel
@@ -501,9 +505,9 @@ using %{name}, you will need to install %{name}-devel.
 # This package contains the development documentation for %%{name}.
 
 %prep
-%setup -n %{name}-%{soletta_release} -q
-%setup -T -D -a 1 -n %{name}-%{soletta_release} -q
-mv duktape-release-%{soletta_duktape_release}/* src/thirdparty/duktape
+%setup -n %{name}-1_%{soletta_release} -q
+%setup -T -D -a 1 -n %{name}-1_%{soletta_release} -q
+mv duktape-release-1_%{soletta_duktape_release}/* src/thirdparty/duktape
 
 %build
 make %{?_smp_mflags}
@@ -519,8 +523,8 @@ make %{?_smp_mflags} DESTDIR=%{buildroot} INSTALL="install -p" CP="cp -p" instal
 
 %files -n lib%{name}
 %defattr(-, root, root, -)
-%{_libdir}/libsoletta.so.0
-%{_libdir}/libsoletta.so.0.0.1
+%{_libdir}/libsoletta.so.%{soletta_major}
+%{_libdir}/libsoletta.so.%{version}
 %{_bindir}/sol-fbp-runner
 %{_datadir}/soletta/board_detect.json
 %{_libdir}/soletta/modules/linux-micro/initial-services
@@ -759,6 +763,7 @@ make %{?_smp_mflags} DESTDIR=%{buildroot} INSTALL="install -p" CP="cp -p" instal
 %changelog
 * Thu Sep 17 2015 Gustavo Lima Chaves
 - make rpmlint quiet for the generated RPMs
+- make version/release strings saner
 
 * Wed Sep 16 2015 Gustavo Lima Chaves
 - make debug package functional
