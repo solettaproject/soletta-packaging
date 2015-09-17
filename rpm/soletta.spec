@@ -1,7 +1,7 @@
 %define soletta_major 0
 %define soletta_minor 0
 %define soletta_build 1
-%define soletta_release beta4
+%define soletta_release beta5
 
 %define soletta_duktape_release beta2
 
@@ -12,13 +12,14 @@ Release: %{soletta_release}%{?dist}
 License: BSD
 Group: System Environment/Libraries
 URL: http://github.com/solettaproject/soletta
-Source0: https://github.com/solettaproject/soletta/archive/v1_%{soletta_release}.tar.gz
+Source0: https://github.com/solettaproject/soletta/archive/%{name}-1_%{soletta_release}.tar.gz
 Source1: https://github.com/solettaproject/duktape-release/archive/v1_%{soletta_duktape_release}.tar.gz
 Source2: config
 BuildRequires: gtk3-devel
 BuildRequires: libcurl-devel
 BuildRequires: libicu-devel
 BuildRequires: pcre-devel
+BuildRequires: mosquitto-devel
 BuildRequires: python3 >= 3.4
 BuildRequires: python3-jsonschema
 
@@ -510,13 +511,12 @@ using %{name}, you will need to install %{name}-devel.
 mv duktape-release-1_%{soletta_duktape_release}/* src/thirdparty/duktape
 
 %build
+export LIBDIR=%{_libdir}/
+cp %{SOURCE2} .config
 make %{?_smp_mflags}
-# TODO: should we generate man pages from doxygen tags?
-# make doc || :
 
 %install
 export LIBDIR=%{_libdir}/
-cp %{SOURCE2} .config
 make %{?_smp_mflags} DESTDIR=%{buildroot} INSTALL="install -p" CP="cp -p" install
 
 %{?%{name}_debug_package}
@@ -541,6 +541,7 @@ make %{?_smp_mflags} DESTDIR=%{buildroot} INSTALL="install -p" CP="cp -p" instal
 %{_datadir}/gdb/auto-load/*
 %{_libdir}/pkgconfig/soletta.pc
 %{_datadir}/soletta/flow/schemas/node-type-genspec.schema
+%{_datadir}/soletta/flow/descriptions/builtins.json
 %{_datadir}/soletta/flow/descriptions/aio.json
 %{_datadir}/soletta/flow/descriptions/app.json
 %{_datadir}/soletta/flow/descriptions/boolean.json
@@ -764,6 +765,7 @@ make %{?_smp_mflags} DESTDIR=%{buildroot} INSTALL="install -p" CP="cp -p" instal
 * Thu Sep 17 2015 Gustavo Lima Chaves
 - make rpmlint quiet for the generated RPMs
 - make version/release strings saner
+- add mqtt deps and roll new soletta release
 
 * Wed Sep 16 2015 Gustavo Lima Chaves
 - make debug package functional
