@@ -18,10 +18,11 @@ Source2: config
 BuildRequires: gtk3-devel
 BuildRequires: libcurl-devel
 BuildRequires: libicu-devel
-BuildRequires: pcre-devel
 BuildRequires: mosquitto-devel
+BuildRequires: pcre-devel
 BuildRequires: python3 >= 3.4
 BuildRequires: python3-jsonschema
+BuildRequires: systemd-devel
 
 %description
 Soletta project is a framework for making IoT devices. With Soletta
@@ -762,6 +763,9 @@ make %{?_smp_mflags} DESTDIR=%{buildroot} INSTALL="install -p" CP="cp -p" instal
 %license COPYING
 
 %changelog
+* Fri Sep 18 2015 Gustavo Lima Chaves
+- add forgotten systemd-devel BuildRequires
+
 * Thu Sep 17 2015 Gustavo Lima Chaves
 - make rpmlint quiet for the generated RPMs
 - make version/release strings saner
