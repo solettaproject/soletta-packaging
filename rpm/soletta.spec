@@ -1,18 +1,17 @@
-%define soletta_major 0
-%define soletta_minor 0
-%define soletta_build 1
-%define soletta_release beta5
+%global soletta_major 0
+%global soletta_minor 0
+%global soletta_build 1
+%global soletta_release beta5
 
-%define soletta_duktape_release beta2
+%global soletta_duktape_release beta2
 
 Summary: A framework for making IoT devices
 Name: soletta
 Version: %{soletta_major}.%{soletta_minor}.%{soletta_build}
 Release: %{soletta_release}%{?dist}
 License: BSD
-Group: System Environment/Libraries
 URL: http://github.com/solettaproject/soletta
-Source0: https://github.com/solettaproject/soletta/archive/%{name}-1_%{soletta_release}.tar.gz
+Source0: https://github.com/solettaproject/soletta/archive/v1_%{soletta_release}.tar.gz
 Source1: https://github.com/solettaproject/duktape-release/archive/v1_%{soletta_duktape_release}.tar.gz
 Source2: config
 BuildRequires: gtk3-devel
@@ -32,7 +31,6 @@ enables adding smartness even on the smallest edge devices.
 
 %package -n lib%{name}
 Summary: A framework for making IoT devices
-Group: System Environment/Libraries
 
 %description -n lib%{name}
 Soletta library allows developers to easily write software for devices
@@ -40,12 +38,8 @@ that control actuators/sensors and communicate using standard
 technologies. It enables adding smartness even on the smallest edge
 devices.
 
-%post -n lib%{name} -p /sbin/ldconfig
-%postun -n lib%{name} -p /sbin/ldconfig
-
 %package -n lib%{name}-flow-module-accelerometer
 Summary: Accelerometer flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-accelerometer
@@ -55,7 +49,6 @@ LSM303DLHC.
 
 %package -n lib%{name}-flow-module-am2315
 Summary: AM2315 flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-am2315
@@ -65,7 +58,6 @@ and humidity).
 
 %package -n lib%{name}-flow-module-calamari
 Summary: Calamari flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-calamari
@@ -75,7 +67,6 @@ provides flow nodes for doing I/O on the Calamari board
 
 %package -n lib%{name}-flow-module-compass
 Summary: Compass flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-compass
@@ -86,7 +77,6 @@ Magnetic North Pole, in degrees.
 
 %package -n lib%{name}-flow-module-evdev
 Summary: Evdev flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-evdev
@@ -96,7 +86,6 @@ provides an evdev node that outputs boolean packets after evdev events
 
 %package -n lib%{name}-flow-module-file
 Summary: File flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-file
@@ -106,7 +95,6 @@ provides a file node meant to read and write data to files
 
 %package -n lib%{name}-flow-module-flower-power
 Summary: Flower-power flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-flower-power
@@ -119,7 +107,6 @@ HTTP, using a web service.
 
 %package -n lib%{name}-flow-module-grove
 Summary: Grove flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-grove
@@ -130,7 +117,6 @@ Grove Starter Kit
 
 %package -n lib%{name}-flow-module-gtk
 Summary: Gtk flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 Requires: gtk3
 
@@ -142,7 +128,6 @@ Gtk UI elements.
 
 %package -n lib%{name}-flow-module-gyroscope
 Summary: Gyroscope flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-gyroscope
@@ -151,7 +136,6 @@ module provides a flow node for the L3G4200D gyroscope.
 
 %package -n lib%{name}-flow-module-iio
 Summary: IIO flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-iio
@@ -161,7 +145,6 @@ can use a buffer to get the readings.
 
 %package -n lib%{name}-flow-module-keyboard
 Summary: Keyboard flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-keyboard
@@ -170,7 +153,6 @@ provides flow nodes for keyboard input.
 
 %package -n lib%{name}-flow-module-led-strip
 Summary: Led-Strip flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-led-strip
@@ -179,7 +161,6 @@ module provides a flow node for the LPD8806 led strip controller.
 
 %package -n lib%{name}-flow-module-location
 Summary: Location flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-location
@@ -190,7 +171,6 @@ address.
 
 %package -n lib%{name}-flow-module-magnetometer
 Summary: Magnetometer flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-magnetometer
@@ -199,7 +179,6 @@ module provides a flow node for the LSM303DLHC magnetometer.
 
 %package -n lib%{name}-flow-module-max31855
 Summary: MAX31855 flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-max31855
@@ -208,7 +187,6 @@ provides a flow node for the MAX31855 temperature reader.
 
 %package -n lib%{name}-flow-module-network
 Summary: Network flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-network
@@ -218,7 +196,6 @@ connect/disconnect events occur.
 
 %package -n lib%{name}-flow-module-oic
 Summary: OIC flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-oic
@@ -228,7 +205,6 @@ provides server and client flow nodes for Open Interconnect Consortium
 
 %package -n lib%{name}-flow-module-persistence
 Summary: Persistence flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-persistence
@@ -238,7 +214,6 @@ type values on the file system or on EFI variables.
 
 %package -n lib%{name}-flow-module-piezo-speaker
 Summary: Piezo-speaker flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-piezo-speaker
@@ -247,7 +222,6 @@ module provides a flow node for sound output on (PWM) piezo speakers.
 
 %package -n lib%{name}-flow-module-process
 Summary: Process flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-process
@@ -257,7 +231,6 @@ stdin/stdout/stderr back into a flow.
 
 %package -n lib%{name}-flow-module-servo-motor
 Summary: Servo-motor flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-servo-motor
@@ -266,7 +239,6 @@ module provides a flow node to control servo motors.
 
 %package -n lib%{name}-flow-module-test
 Summary: Test flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-test
@@ -276,7 +248,6 @@ provides flow nodes that aids one to write testing/validation flows
 
 %package -n lib%{name}-flow-module-thingspeak
 Summary: ThingSpeak flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-thingspeak
@@ -289,7 +260,6 @@ obtaining a Talkback ID is also required.
 
 %package -n lib%{name}-flow-module-udev
 Summary: Udev flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 Requires: udev
 
@@ -300,7 +270,6 @@ are attached or detached on the system.
 
 %package -n lib%{name}-flow-module-unix-socket
 Summary: Unix-socket flow module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-module-unix-socket
@@ -310,7 +279,6 @@ unix sockets.
 
 %package -n lib%{name}-flow-metatype-module-js
 Summary: JavaScript flow metatype module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-flow-metatype-module-js
@@ -319,151 +287,8 @@ The module a JavaScript metatype for flows, i. e., the possibility of
 declaring new node types with the behavior implemented in that
 language, directly in .fbp files.
 
-%package -n lib%{name}-linux-micro-module-bluetooth
-Summary: Bluetooth linux-micro module for %{name}
-Group: System Environment/Libraries
-Requires: lib%{name}%{?_isa} = %{version}-%{release}
-
-%description -n lib%{name}-linux-micro-module-bluetooth
-This package contains the bluetooth linux-micro module for %{name}.
-The module controls the bluetooth daemon in the system.
-
-%package -n lib%{name}-linux-micro-module-console
-Summary: Console linux-micro module for %{name}
-Group: System Environment/Libraries
-Requires: lib%{name}%{?_isa} = %{version}-%{release}
-
-%description -n lib%{name}-linux-micro-module-console
-This package contains the console linux-micro module for %{name}. The
-module spawns agetty (or getty or /bin/sh) on consoles defined by
-kernel, re-spawning as they exit. This service is useful during
-development or for devices that should allow maintenance access by a
-serial console. The consoles are defined by the kernel as it reads the
-kernel command line for "console=XXX" statements, see
-https://www.kernel.org/doc/Documentation/serial-console.txt.
-
-%package -n lib%{name}-linux-micro-module-dbus
-Summary: D-Bus linux-micro module for %{name}
-Group: System Environment/Libraries
-Requires: lib%{name}%{?_isa} = %{version}-%{release}
-Requires: dbus
-
-%description -n lib%{name}-linux-micro-module-dbus
-This package contains the D-Bus linux-micro module for %{name}. The
-module controls the D-Bus daemon in the system.
-
-%package -n lib%{name}-linux-micro-module-fstab
-Summary: The fstab linux-micro module for %{name}
-Group: System Environment/Libraries
-Requires: lib%{name}%{?_isa} = %{version}-%{release}
-
-%description -n lib%{name}-linux-micro-module-fstab
-This package contains the fstab linux-micro module for %{name}. The
-module will mount file systems in /etc/fstab. This is a simple
-implementation that will mount entries, however no file system check
-(fsck) is done. Moreover, the fifth and sixth fields ('fs_freq' and
-'fs_passno') are not used. The file /etc/fstab is optional, if it
-does not exist the service starts but nothing is mounted.
-
-%package -n lib%{name}-linux-micro-module-hostname
-Summary: Hostname linux-micro module for %{name}
-Group: System Environment/Libraries
-Requires: lib%{name}%{?_isa} = %{version}-%{release}
-
-%description -n lib%{name}-linux-micro-module-hostname
-This package contains the hostname linux-micro module for %{name}. The
-module reads /etc/hostname and sets machine hostname. When the file is
-read, leading and trailing spaces are ignored and the resulting string
-is sent directly to sethostname(2). The file /etc/hostname must exist.
-
-%package -n lib%{name}-linux-micro-module-locale
-Summary: Locale linux-micro module for %{name}
-Group: System Environment/Libraries
-Requires: lib%{name}%{?_isa} = %{version}-%{release}
-
-%description -n lib%{name}-linux-micro-module-locale
-This package contains the locale linux-micro module for %{name}. The
-module implements a service to sets locale environment variables. It
-will mimic systemd-localed.service and read the locale setting from
-/etc/locale.conf or kernel command line, then setting the environment
-variables in the current and children processes.
-
-%package -n lib%{name}-linux-micro-module-machine-id
-Summary: Machine-Id linux-micro module for %{name}
-Group: System Environment/Libraries
-Requires: lib%{name}%{?_isa} = %{version}-%{release}
-
-%description -n lib%{name}-linux-micro-module-machine-id
-This package contains the machine-id linux-micro module for %{name}.
-The module provides a service that guarantees the presence and
-validity of a unique machine identifier in the file system. This UUID
-is made available for the rest of Soletta by an utility function.
-
-%package -n lib%{name}-linux-micro-module-network-up
-Summary: Network-up linux-micro module for %{name}
-Group: System Environment/Libraries
-Requires: lib%{name}%{?_isa} = %{version}-%{release}
-
-%description -n lib%{name}-linux-micro-module-network-up
-This package contains the network-up linux-micro module for %{name}.
-The module implements a service that will enumerate all network
-interfaces using netlink and then bring up all of them. If the kernel
-is configured for IPv6 (CONFIG_IPV6=y) then automatic IP addresses are
-assigned based on the MAC address. This service relies on netlink
-communication with the kernel.
-
-%package -n lib%{name}-linux-micro-module-rc-d
-Summary: The rc-d linux-micro module for %{name}
-Group: System Environment/Libraries
-Requires: lib%{name}%{?_isa} = %{version}-%{release}
-
-%description -n lib%{name}-linux-micro-module-rc-d
-This package contains the rc-d linux-micro module for %{name}. The
-module provides a init.d/rc.d compatibility service that is able to
-run scripts from /etc/init.d or /etc/rc.d with standard parameters
-"start", "stop", "restart" and "status". To enable a service all one
-needs to do is symlink the service name to rc-d.so. As an example, to
-enable /etc/init.d/myservice to be used by linux-micro: ln -s
-%{_libdir}/soletta/modules/linux-micro/rc-d.so
-%{_libdir}/soletta/modules/linux-micro/myservice.so. A set of services
-are started automatically by Soletta in order to do initialization --
-those are listed in
-%{_libdir}/soletta/modules/linux-micro/initial-services.
-
-%package -n lib%{name}-linux-micro-module-sysctl
-Summary: The sysctl linux-micro module for %{name}
-Group: System Environment/Libraries
-Requires: lib%{name}%{?_isa} = %{version}-%{release}
-
-%description -n lib%{name}-linux-micro-module-sysctl
-This package contains the sysctl linux-micro module for %{name}. The
-module sets kernel parameters from sysctl.conf files. This service
-will mimic systemd-sysctl.service and read the settings from
-'/etc/sysctl.conf' or '/run/sysctl.d', '/etc/sysctl.d',
-'/usr/local/lib/sysctl.d', '/usr/lib/sysctl.d', '/lib/sysctl.d'. Files
-are processed in alphabetical order. See
-http://www.freedesktop.org/software/systemd/man/systemd-sysctl.service.html.
-
-%package -n lib%{name}-linux-micro-module-watchdog
-Summary: Watchdog linux-micro module for %{name}
-Group: System Environment/Libraries
-Requires: lib%{name}%{?_isa} = %{version}-%{release}
-
-%description -n lib%{name}-linux-micro-module-watchdog
-This package contains the watchdog linux-micro module for %{name}. The
-module starts and keeps alive the kernel watchdog. Linux provides a
-watchdog API with both software and hardware implementations. The
-software implementation may be used to protect against userspace
-hangups, while the hardware may protect from kernel hangups as well.
-This module will open /dev/watchdog, check the period and start a
-timer to keep the watchdog alive, avoiding the system to be rebooted.
-If the application hangs for more than such period, the watchdog will
-reboot the device. See
-https://www.kernel.org/doc/Documentation/watchdog/watchdog-api.txt.
-
 %package -n lib%{name}-pin-mux-module-galileo
 Summary: Galileo pin-mux module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-pin-mux-module-galileo
@@ -475,7 +300,6 @@ beforehand.
 
 %package -n lib%{name}-pin-mux-module-edison
 Summary: Edison pin-mux module for %{name}
-Group: System Environment/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 
 %description -n lib%{name}-pin-mux-module-edison
@@ -487,7 +311,6 @@ beforehand.
 
 %package -n lib%{name}-devel
 Summary: Header files, libraries and development documentation for %{name}
-Group: Development/Libraries
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
 Requires: python3 >= 3.4
 
@@ -501,7 +324,6 @@ using %{name}, you will need to install %{name}-devel.
 
 # %%package -n lib%%{name}-doc
 # Summary: Development documentation for %%{name}
-# Group: Documentation
 
 # %%description -n lib%%{name}-doc
 # This package contains the development documentation for %%{name}.
@@ -514,30 +336,56 @@ mv duktape-release-1_%{soletta_duktape_release}/* src/thirdparty/duktape
 %build
 export LIBDIR=%{_libdir}/
 cp %{SOURCE2} .config
-make %{?_smp_mflags}
+make silentoldconfig
+make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mflags}
 
 %install
 export LIBDIR=%{_libdir}/
-make %{?_smp_mflags} DESTDIR=%{buildroot} INSTALL="install -p" CP="cp -p" install
+make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mflags} DESTDIR=%{buildroot} INSTALL="install -p" CP="cp -p" install
+
+%post -n lib%{name} -p /sbin/ldconfig
+%postun -n lib%{name} -p /sbin/ldconfig
 
 %{?%{name}_debug_package}
 
 %files -n lib%{name}
-%defattr(-, root, root, -)
 %{_libdir}/libsoletta.so.%{soletta_major}
 %{_libdir}/libsoletta.so.%{version}
 %{_bindir}/sol-fbp-runner
+%dir %{_datadir}/soletta
 %{_datadir}/soletta/board_detect.json
+%dir %{_libdir}/soletta
+%dir %{_libdir}/soletta/modules
+%dir %{_libdir}/soletta/modules/flow
+%dir %{_libdir}/soletta/modules/flow-metatype
+%dir %{_libdir}/soletta/modules/linux-micro
+%dir %{_libdir}/soletta/modules/pin-mux
 %{_libdir}/soletta/modules/linux-micro/initial-services
+%{_libdir}/soletta/modules/linux-micro/bluetooth.so
+%{_libdir}/soletta/modules/linux-micro/console.so
+%{_libdir}/soletta/modules/linux-micro/dbus.so
+%{_libdir}/soletta/modules/linux-micro/fstab.so
+%{_libdir}/soletta/modules/linux-micro/hostname.so
+%{_libdir}/soletta/modules/linux-micro/locale.so
+%{_libdir}/soletta/modules/linux-micro/machine-id.so
+%{_libdir}/soletta/modules/linux-micro/network-up.so
+%{_libdir}/soletta/modules/linux-micro/rc-d.so
+%{_libdir}/soletta/modules/linux-micro/sysctl.so
+%{_libdir}/soletta/modules/linux-micro/watchdog.so
+
+%license COPYING
 
 %files -n lib%{name}-devel
-%defattr(-, root, root, -)
 %{_libdir}/libsoletta.so
 %{_bindir}/sol-fbp-generator
 %{_bindir}/sol-fbp-to-dot
 %{_bindir}/sol-flow-node-type-gen.py
 %{_bindir}/sol-flow-node-types
 %{_bindir}/sol-flow-node-type-validate.py
+%dir %{_datadir}/soletta/flow
+%dir %{_datadir}/soletta/flow/descriptions
+%dir %{_datadir}/soletta/flow/schemas
+%dir %{_includedir}/soletta
 %{_includedir}/soletta/*
 %{_datadir}/gdb/auto-load/*
 %{_libdir}/pkgconfig/soletta.pc
@@ -568,215 +416,123 @@ make %{?_smp_mflags} DESTDIR=%{buildroot} INSTALL="install -p" CP="cp -p" instal
 %{_datadir}/soletta/flow/descriptions/wallclock.json
 
 %files -n lib%{name}-flow-module-accelerometer
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/accelerometer.so
 %{_datadir}/soletta/flow/descriptions/accelerometer.json
 
 %files -n lib%{name}-flow-module-am2315
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/am2315.so
 %{_datadir}/soletta/flow/descriptions/am2315.json
 
 %files -n lib%{name}-flow-module-calamari
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/calamari.so
 %{_datadir}/soletta/flow/descriptions/calamari.json
 
 %files -n lib%{name}-flow-module-compass
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/compass.so
 %{_datadir}/soletta/flow/descriptions/compass.json
 
 %files -n lib%{name}-flow-module-evdev
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/evdev.so
 %{_datadir}/soletta/flow/descriptions/evdev.json
 
 %files -n lib%{name}-flow-module-file
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/file.so
 %{_datadir}/soletta/flow/descriptions/file.json
 
 %files -n lib%{name}-flow-module-flower-power
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/flower-power.so
 %{_datadir}/soletta/flow/descriptions/flower-power.json
 
 %files -n lib%{name}-flow-module-grove
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/grove.so
 %{_datadir}/soletta/flow/descriptions/grove.json
 
 %files -n lib%{name}-flow-module-gtk
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/gtk.so
 %{_datadir}/soletta/flow/descriptions/gtk.json
 
 %files -n lib%{name}-flow-module-gyroscope
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/gyroscope.so
 %{_datadir}/soletta/flow/descriptions/gyroscope.json
 
 %files -n lib%{name}-flow-module-iio
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/iio.so
 %{_datadir}/soletta/flow/descriptions/iio.json
 
 %files -n lib%{name}-flow-module-keyboard
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/keyboard.so
 %{_datadir}/soletta/flow/descriptions/keyboard.json
 
 %files -n lib%{name}-flow-module-led-strip
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/led-strip.so
 %{_datadir}/soletta/flow/descriptions/led-strip.json
 
 %files -n lib%{name}-flow-module-location
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/location.so
 %{_datadir}/soletta/flow/descriptions/location.json
 
 %files -n lib%{name}-flow-module-magnetometer
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/magnetometer.so
 %{_datadir}/soletta/flow/descriptions/magnetometer.json
 
 %files -n lib%{name}-flow-module-max31855
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/max31855.so
 %{_datadir}/soletta/flow/descriptions/max31855.json
 
 %files -n lib%{name}-flow-module-network
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/network.so
 %{_datadir}/soletta/flow/descriptions/network.json
 
 %files -n lib%{name}-flow-module-oic
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/oic.so
 %{_datadir}/soletta/flow/descriptions/oic.json
 
 %files -n lib%{name}-flow-module-persistence
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/persistence.so
 %{_datadir}/soletta/flow/descriptions/persistence.json
 
 %files -n lib%{name}-flow-module-piezo-speaker
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/piezo-speaker.so
 %{_datadir}/soletta/flow/descriptions/piezo-speaker.json
 
 %files -n lib%{name}-flow-module-process
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/process.so
 %{_datadir}/soletta/flow/descriptions/process.json
 
 %files -n lib%{name}-flow-module-servo-motor
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/servo-motor.so
 %{_datadir}/soletta/flow/descriptions/servo-motor.json
 
 %files -n lib%{name}-flow-module-test
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/test.so
 %{_datadir}/soletta/flow/descriptions/test.json
 
 %files -n lib%{name}-flow-module-thingspeak
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/thingspeak.so
 %{_datadir}/soletta/flow/descriptions/thingspeak.json
 
 %files -n lib%{name}-flow-module-udev
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/udev.so
 %{_datadir}/soletta/flow/descriptions/udev.json
 
 %files -n lib%{name}-flow-module-unix-socket
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow/unix-socket.so
 %{_datadir}/soletta/flow/descriptions/unix-socket.json
 
 %files -n lib%{name}-flow-metatype-module-js
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/flow-metatype/js.so
 
-%files -n lib%{name}-linux-micro-module-bluetooth
-%defattr(-, root, root, -)
-%{_libdir}/soletta/modules/linux-micro/bluetooth.so
-
-%files -n lib%{name}-linux-micro-module-console
-%defattr(-, root, root, -)
-%{_libdir}/soletta/modules/linux-micro/console.so
-
-%files -n lib%{name}-linux-micro-module-dbus
-%defattr(-, root, root, -)
-%{_libdir}/soletta/modules/linux-micro/dbus.so
-
-%files -n lib%{name}-linux-micro-module-fstab
-%defattr(-, root, root, -)
-%{_libdir}/soletta/modules/linux-micro/fstab.so
-
-%files -n lib%{name}-linux-micro-module-hostname
-%defattr(-, root, root, -)
-%{_libdir}/soletta/modules/linux-micro/hostname.so
-
-%files -n lib%{name}-linux-micro-module-locale
-%defattr(-, root, root, -)
-%{_libdir}/soletta/modules/linux-micro/locale.so
-
-%files -n lib%{name}-linux-micro-module-machine-id
-%defattr(-, root, root, -)
-%{_libdir}/soletta/modules/linux-micro/machine-id.so
-
-%files -n lib%{name}-linux-micro-module-network-up
-%defattr(-, root, root, -)
-%{_libdir}/soletta/modules/linux-micro/network-up.so
-
-%files -n lib%{name}-linux-micro-module-rc-d
-%defattr(-, root, root, -)
-%{_libdir}/soletta/modules/linux-micro/rc-d.so
-
-%files -n lib%{name}-linux-micro-module-sysctl
-%defattr(-, root, root, -)
-%{_libdir}/soletta/modules/linux-micro/sysctl.so
-
-%files -n lib%{name}-linux-micro-module-watchdog
-%defattr(-, root, root, -)
-%{_libdir}/soletta/modules/linux-micro/watchdog.so
-
 %files -n lib%{name}-pin-mux-module-galileo
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/pin-mux/intel-galileo-rev-d.so
 %{_libdir}/soletta/modules/pin-mux/intel-galileo-rev-g.so
 
 %files -n lib%{name}-pin-mux-module-edison
-%defattr(-, root, root, -)
 %{_libdir}/soletta/modules/pin-mux/intel-edison-rev-c.so
 
 # TODO: should we generate man pages from doxygen tags?
-
 # %%files -n lib%%{name}-doc
-# %%defattr(-, root, root, -)
 # %%doc %%{_mandir}/man3/*
 
-%license COPYING
-
 %changelog
-* Fri Sep 18 2015 Gustavo Lima Chaves
-- add forgotten systemd-devel BuildRequires
-
-* Thu Sep 17 2015 Gustavo Lima Chaves
-- make rpmlint quiet for the generated RPMs
-- make version/release strings saner
-- add mqtt deps and roll new soletta release
-
-* Wed Sep 16 2015 Gustavo Lima Chaves
-- make debug package functional
-- make rpmlint quiet for this spec
-
-* Tue Sep 15 2015 Gustavo Lima Chaves
-- add pre-made config for Fedora 22
-
-* Fri Sep 11 2015 Gustavo Lima Chaves
+* Tue Sep 2 2015 Gustavo Lima Chaves <gustavo.lima.chaves@intel.com> - 0.0.1-beta5
 - first build for Fedora 22
