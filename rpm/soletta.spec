@@ -1,19 +1,20 @@
 %global soletta_major 0
 %global soletta_minor 0
 %global soletta_build 1
-%global soletta_release beta5
+%global soletta_tag beta5
 
-%global soletta_duktape_release beta2
+%global soletta_duktape_tag beta2
 
 Summary: A framework for making IoT devices
 Name: soletta
 Version: %{soletta_major}.%{soletta_minor}.%{soletta_build}
-Release: %{soletta_release}%{?dist}
+Release: 0.1.%{soletta_tag}%{?dist}
 License: BSD
 URL: http://github.com/solettaproject/soletta
-Source0: https://github.com/solettaproject/soletta/archive/v1_%{soletta_release}.tar.gz
-Source1: https://github.com/solettaproject/duktape-release/archive/v1_%{soletta_duktape_release}.tar.gz
-Source2: config
+Source0: https://github.com/solettaproject/%{name}/archive/v1_%{soletta_tag}.tar.gz#/%{name}-%{version}.tar.gz
+Source1: https://github.com/solettaproject/duktape-release/archive/v1_%{soletta_duktape_tag}.tar.gz#/%{name}-duktape-%{version}.tar.gz
+Source2: config-linux-micro
+Source3: config-systemd
 BuildRequires: gtk3-devel
 BuildRequires: libcurl-devel
 BuildRequires: libicu-devel
@@ -329,13 +330,18 @@ using %{name}, you will need to install %{name}-devel.
 # This package contains the development documentation for %%{name}.
 
 %prep
-%setup -n %{name}-1_%{soletta_release} -q
-%setup -T -D -a 1 -n %{name}-1_%{soletta_release} -q
-mv duktape-release-1_%{soletta_duktape_release}/* src/thirdparty/duktape
+
+%setup -qn %{name}-1_%{soletta_tag}
+%setup -T -D -a 1 -qn %{name}-1_%{soletta_tag}
+mv duktape-release-1_%{soletta_duktape_tag}/* src/thirdparty/duktape
 
 %build
 export LIBDIR=%{_libdir}/
+%if 0%{?fedora} < 23
 cp %{SOURCE2} .config
+%else
+cp %{SOURCE3} .config
+%endif
 make silentoldconfig
 make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mflags}
 
@@ -358,8 +364,9 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %dir %{_libdir}/soletta/modules
 %dir %{_libdir}/soletta/modules/flow
 %dir %{_libdir}/soletta/modules/flow-metatype
-%dir %{_libdir}/soletta/modules/linux-micro
 %dir %{_libdir}/soletta/modules/pin-mux
+%if 0%{?fedora} < 23
+%dir %{_libdir}/soletta/modules/linux-micro
 %{_libdir}/soletta/modules/linux-micro/initial-services
 %{_libdir}/soletta/modules/linux-micro/bluetooth.so
 %{_libdir}/soletta/modules/linux-micro/console.so
@@ -372,6 +379,7 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %{_libdir}/soletta/modules/linux-micro/rc-d.so
 %{_libdir}/soletta/modules/linux-micro/sysctl.so
 %{_libdir}/soletta/modules/linux-micro/watchdog.so
+%endif
 
 %license COPYING
 
@@ -534,5 +542,5 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 # %%doc %%{_mandir}/man3/*
 
 %changelog
-* Tue Sep 2 2015 Gustavo Lima Chaves <gustavo.lima.chaves@intel.com> - 0.0.1-beta5
+* Thu Sep 24 2015 Gustavo Lima Chaves <gustavo.lima.chaves@intel.com> - 0.0.1-beta5
 - first build for Fedora 22
