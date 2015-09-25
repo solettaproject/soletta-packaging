@@ -1,5 +1,17 @@
 # Maintainer: Anselmo L. S. Melo <anselmo.melo@intel.com>
-pkgname=soletta
+pkgbase=soletta
+pkgname=(soletta soletta-flow-module-accelerometer soletta-flow-module-am2315 soletta-flow-module-calamari
+         soletta-flow-module-compass soletta-flow-module-evdev soletta-flow-module-file soletta-flow-module-flower-power
+         soletta-flow-module-grove soletta-flow-module-gtk soletta-flow-module-gyroscope soletta-flow-module-iio
+         soletta-flow-module-keyboard soletta-flow-module-led-strip soletta-flow-module-location soletta-flow-module-magnetometer
+         soletta-flow-module-max31855 soletta-flow-module-network soletta-flow-module-oic soletta-flow-module-persistence
+         soletta-flow-module-piezo-speaker soletta-flow-module-process soletta-flow-module-servo-motor soletta-flow-module-test
+         soletta-flow-module-thingspeak soletta-flow-module-udev soletta-flow-module-unix-socket soletta-flow-metatype-module-js
+         # soletta-linux-micro-module-bluetooth soletta-linux-micro-module-console soletta-linux-micro-module-dbus
+         # soletta-linux-micro-module-fstab soletta-linux-micro-module-hostname soletta-linux-micro-module-locale
+         # soletta-linux-micro-module-machine-id soletta-linux-micro-module-network-up soletta-linux-micro-module-rc-d
+         # soletta-linux-micro-module-sysctl soletta-linux-micro-module-watchdog
+         soletta-pin-mux-module-galileo soletta-pin-mux-module-edison)
 pkgver=1_beta4
 pkgrel=1
 pkgdesc="Soletta project is a framework for making IoT devices."
@@ -7,25 +19,255 @@ arch=('i686' 'x86_64')
 url="http://github.com/solettaproject/soletta"
 license=('custom:BSD3')
 depends=('python>=3.4' 'python-jsonschema')
-makedepends=('git' 'python>=3.4' 'python-jsonschema')
+makedepends=('python>=3.4' 'python-jsonschema')
 checkdepends=()
 optdepends=('gtk3' 'icu' 'curl' 'systemd')
 conflicts=('soletta-git')
-source=("https://github.com/solettaproject/soletta/archive/v$pkgver.tar.gz")
-md5sums=('26ce6240441f8cefba538c59f645b5c5')
+source=("https://github.com/solettaproject/soletta/archive/v$pkgver.tar.gz"
+        "https://github.com/solettaproject/duktape-release/archive/v1_beta2.tar.gz")
+md5sums=('26ce6240441f8cefba538c59f645b5c5'
+         '69195d623d739158ecb055aeb02fd77b')
 
 prepare() {
-    cd "$pkgname-$pkgver"
-    git submodule init && git submodule update
+  cd "$pkgbase-$pkgver"
+  cp -r ../duktape-release-1_beta2/* src/thirdparty/duktape/
 }
 
 build() {
-	cd "$pkgname-$pkgver"
-    make alldefconfig
-	make
+  cd "$pkgbase-$pkgver"
+  make alldefconfig
+  make
 }
 
-package() {
-	cd "$pkgname-$pkgver"
-	make DESTDIR="$pkgdir/" install
+package_soletta() {
+  cd "$pkgbase-$pkgver"
+  install -d $pkgdir/usr/{bin,include/soletta/sol-flow,lib/pkgconfig}
+  install -d $pkgdir/usr/share/{soletta/flow/schemas,gdb/auto-load,soletta/flow/descriptions}
+  cp -dp build/soletta_sysroot/usr/lib/*.so* $pkgdir/usr/lib/
+  install -m755 build/soletta_sysroot/usr/bin/* $pkgdir/usr/bin/
+  install -m644 data/jsons/board_detect.json $pkgdir/usr/share/soletta/board_detect.json
+  install -m644 data/gdb/* $pkgdir/usr/share/gdb/auto-load/*
+  install -m644 data/schemas/node-type-genspec.schema $pkgdir/usr/share/soletta/flow/schemas/
+  install -m644 build/soletta_sysroot/usr/include/soletta/*.h $pkgdir/usr/include/soletta/
+  install -m644 build/soletta_sysroot/usr/include/soletta/sol-flow/* $pkgdir/usr/include/soletta/sol-flow/
+  install -m644 build/soletta_sysroot/usr/lib/pkgconfig/soletta.pc $pkgdir/usr/lib/pkgconfig/
+
+  BUILTIN_MODULES='aio app boolean builtins byte color console
+                   constant converter filter-repeated float gpio int
+                   led-7seg platform pwm random string switcher
+                   temperature timer timestamp trigonometry wallclock'
+
+  for m in $BUILTIN_MODULES; do
+    install -Dm644 build/soletta_sysroot/usr/share/soletta/flow/descriptions/$m.json $pkgdir/usr/share/soletta/flow/descriptions/
+  done
+}
+
+_helper() {
+  cd "$srcdir/$pkgbase-$pkgver"
+  PKG=${2##soletta-$1-module-}
+  install -Dm644 build/soletta_sysroot/usr/lib/soletta/modules/$1/$PKG.so $pkgdir/usr/lib/soletta/modules/$1/$PKG.so
+  if [ "$1" = "flow" ]; then
+      install -Dm644 build/soletta_sysroot/usr/share/soletta/$1/descriptions/$PKG.json $pkgdir/usr/share/soletta/$1/descriptions/$PKG.json
+  fi
+}
+
+package_soletta-flow-module-accelerometer() {
+  pkgdesc="Accelerometer flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-am2315() {
+  pkgdesc="AM2315 flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-calamari() {
+  pkgdesc="Calamari flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-compass() {
+  pkgdesc="Compass flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-evdev() {
+  pkgdesc="Evdev flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-file() {
+  pkgdesc="File flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-flower-power() {
+  pkgdesc="Flower-power flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-grove() {
+  pkgdesc="Grove kit flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-gtk() {
+  pkgdesc="Gtk flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-gyroscope() {
+  pkgdesc="Gyroscope flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-iio() {
+  pkgdesc="IIO flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-keyboard() {
+  pkgdesc="Keyboard flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-led-strip() {
+  pkgdesc="Led-strip flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-location() {
+  pkgdesc="Location flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-magnetometer() {
+  pkgdesc="Magnetometer flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-max31855() {
+  pkgdesc="MAX31855 flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-network() {
+  pkgdesc="Network flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-oic() {
+  pkgdesc="OIC flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-persistence() {
+  pkgdesc="Persistence flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-piezo-speaker() {
+  pkgdesc="Piezo-speaker flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-process() {
+  pkgdesc="Process flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-servo-motor() {
+  pkgdesc="Servo-motor flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-test() {
+  pkgdesc="Test flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-thingspeak() {
+  pkgdesc="ThingSpeak flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-udev() {
+  pkgdesc="Udev flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-module-unix-socket() {
+  pkgdesc="Unix-socket flow module for %pkgbase"
+  _helper flow $pkgname
+}
+
+package_soletta-flow-metatype-module-js() {
+  pkgdesc="Javascript flow module for %pkgbase"
+  _helper flow-metatype $pkgname
+}
+
+# package_soletta-linux-micro-module-bluetooth() {
+#     pkgdesc="Bluetooth linux-micro module for %pkgbase"
+#     _helper linux-micro $pkgname
+# }
+
+# package_soletta-linux-micro-module-console() {
+#     pkgdesc="Console linux-micro module for %pkgbase"
+#     _helper linux-micro $pkgname
+# }
+
+# package_soletta-linux-micro-module-dbus() {
+#     pkgdesc="D-Bus linux-micro module for %pkgbase"
+#     _helper linux-micro $pkgname
+# }
+
+# package_soletta-linux-micro-module-fstab() {
+#     pkgdesc="fstab linux-micro module for %pkgbase"
+#     _helper linux-micro $pkgname
+# }
+
+# package_soletta-linux-micro-module-hostname() {
+#     pkgdesc="Hostname linux-micro module for %pkgbase"
+#     _helper linux-micro $pkgname
+# }
+
+# package_soletta-linux-micro-module-locale() {
+#     pkgdesc="Locale linux-micro module for %pkgbase"
+#     _helper linux-micro $pkgname
+# }
+
+# package_soletta-linux-micro-module-machine-id() {
+#     pkgdesc="Machine-Id linux-micro module for %pkgbase"
+#     _helper linux-micro $pkgname
+# }
+
+# package_soletta-linux-micro-module-network-up() {
+#     pkgdesc="Network-up linux-micro module for %pkgbase"
+#     _helper linux-micro $pkgname
+# }
+
+# package_soletta-linux-micro-module-rc-d() {
+#     pkgdesc="rc-d linux-micro module for %pkgbase"
+#     _helper linux-micro $pkgname
+# }
+
+# package_soletta-linux-micro-module-sysctl() {
+#     pkgdesc="sysctl linux-micro module for %pkgbase"
+#     _helper linux-micro $pkgname
+# }
+
+# package_soletta-linux-micro-module-watchdog() {
+#     pkgdesc="Watchdog linux-micro module for %pkgbase"
+#     _helper linux-micro $pkgname
+# }
+
+package_soletta-pin-mux-module-galileo() {
+  pkgdesc="Galileo pin-mux module for %pkgbase"
+  _helper pin-mux intel-galileo-rev-d
+  _helper pin-mux intel-galileo-rev-g
+}
+
+package_soletta-pin-mux-module-edison() {
+  pkgdesc="Edison pin-mux module for %pkgbase"
+  _helper pin-mux intel-edison-rev-c
 }
