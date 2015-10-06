@@ -1,0 +1,6 @@
+libsoletta for Debian
+------------------
+
+Initial package. alldefconfig. Without duktape.
+
+ -- Anselmo L. S. Melo <anselmo.melo@intel.com>  Thu, 20 Aug 2015 18:17:12 -0400

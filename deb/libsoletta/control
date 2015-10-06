@@ -1,0 +1,34 @@
+Source: libsoletta
+Priority: optional
+Maintainer: Anselmo L. S. Melo <anselmo.melo@intel.com>
+Build-Depends: debhelper (>= 8.0.0), cdbs, python3 (>=3.4), python3-jsonschema, libudev-dev, libpcre3-dev, libicu-dev, libcurl4-openssl-dev
+Standards-Version: 3.9.4
+Section: libs
+Homepage: http://github.com/solettaproject/soletta
+
+Package: libsoletta-dev
+Section: libdevel
+Architecture: any
+Depends: libsoletta (= ${binary:Version}), python3 (>=3.4), python3-jsonschema
+Description: Soletta Project is a framework for making IoT devices.
+ With Soletta Project's libraries developers can easily write software
+ for devices that control  actuators/sensors and communicate using stanard
+ technologies. It enables adding smartness even on the smallest edge devices.
+
+Package: libsoletta-bin
+Section: libdevel
+Architecture: any
+Depends: libsoletta (= ${binary:Version}), libsoletta-dev
+Description: Soletta Project is a framework for making IoT devices.
+ With Soletta Project's libraries developers can easily write software
+ for devices that control  actuators/sensors and communicate using stanard
+ technologies. It enables adding smartness even on the smallest edge devices.
+
+Package: libsoletta
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Soletta Project is a framework for making IoT devices.
+ With Soletta Project's libraries developers can easily write software
+ for devices that control  actuators/sensors and communicate using stanard
+

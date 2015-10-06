@@ -1,0 +1,23 @@
+libsoletta (1beta4-1ppa2) trusty; urgency=low
+ 
+  * Install schemas
+
+ -- Anselmo L. S. Melo <anselmo.melo@intel.com>  Fri, 14 Sep 2015 15:33:12 -0300
+
+libsoletta (1beta4-1ppa1) trusty; urgency=low
+ 
+  * Update to 1beta4
+
+ -- Anselmo L. S. Melo <anselmo.melo@intel.com>  Fri, 14 Sep 2015 14:33:12 -0300
+
+libsoletta (1beta3-1ppa2) trusty; urgency=low
+ 
+  * Fix packaging issues
+
+ -- Anselmo L. S. Melo <anselmo.melo@intel.com>  Fri, 04 Sep 2015 16:33:12 -0300
+
+libsoletta (1beta3-1ppa1) trusty; urgency=low
+ 
+  * Initial release
+
+ -- Anselmo L. S. Melo <anselmo.melo@intel.com>  Tue, 01 Sep 2015 16:33:12 -0300
