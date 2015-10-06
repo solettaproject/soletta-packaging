@@ -1,10 +1,10 @@
 pkgname=soletta
-pkgver=1_beta4
+pkgver=1_beta6
 pkgrel=1
 checkdepends=()
 conflicts=('soletta-git')
 source=("https://github.com/solettaproject/soletta/archive/v$pkgver.tar.gz")
-md5sums=('26ce6240441f8cefba538c59f645b5c5')
+md5sums=('8ef846a1e9def168ec90d4dfaa5b2c68')
 
 prepare() {
     cd "$pkgname-$pkgver"
