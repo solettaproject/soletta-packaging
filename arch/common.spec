@@ -5,4 +5,4 @@ url="http://github.com/solettaproject/soletta"
 license=('custom:BSD3')
 depends=('python>=3.4' 'python-jsonschema' 'icu' 'curl' 'systemd' 'pcre')
 makedepends=('git' 'python>=3.4' 'python-jsonschema')
-optdepends=('gtk3')
+optdepends=('gtk3' 'libmicrohttpd' 'mosquitto')
