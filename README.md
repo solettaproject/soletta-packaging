@@ -15,6 +15,7 @@ targets.
  * [General Information](#general-information)
  * [RPM](#rpm)
  * [DEB](#deb)
+ * [ARCH](#arch)
  * [Contributing](#contributing)
 
 
@@ -32,6 +33,11 @@ soletta rpm files.
 
 Under the deb folder, one will find the debian recipes to build all
 soletta deb files.
+
+## ARCH
+
+Under the arch folder, one will find a script and spec files to generate
+PKGBUILDs for soletta and soletta-git packages for Arch Linux.
 
 ## Contributing
 
