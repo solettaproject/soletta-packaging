@@ -1,3 +1,2 @@
-/build/soletta_sysroot/usr/share/soletta/flow/descriptions/*.json usr/share/soletta/flow/descriptions/
-/build/soletta_sysroot/usr/lib/soletta/modules/* usr/lib/soletta/modules/
+/build/soletta_sysroot/usr/bin/sol-fbp-runner usr/bin/
 /build/soletta_sysroot/usr/lib/libsoletta.so* usr/lib/
