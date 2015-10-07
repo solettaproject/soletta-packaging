@@ -1,0 +1,293 @@
+Source: libsoletta
+Priority: optional
+Maintainer: Anselmo L. S. Melo <anselmo.melo@intel.com>
+Build-Depends: debhelper (>= 8.0.0), cdbs, python3 (>=3.4), python3-jsonschema, libudev-dev, libpcre3-dev, libicu-dev, libcurl4-openssl-dev, libgtk-3-dev
+Standards-Version: 3.9.4
+Section: libs
+Homepage: http://github.com/solettaproject/soletta
+
+Package: libsoletta-dev
+Section: libdevel
+Architecture: any
+Depends: libsoletta (= ${binary:Version}), python3 (>=3.4), python3-jsonschema
+Description: Soletta Project is a framework for making IoT devices.
+ With Soletta Project's libraries developers can easily write software
+ for devices that control  actuators/sensors and communicate using stanard
+ technologies. It enables adding smartness even on the smallest edge devices.
+
+Package: libsoletta
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Soletta Project is a framework for making IoT devices.
+ With Soletta Project's libraries developers can easily write software
+ for devices that control  actuators/sensors and communicate using stanard
+
+Package: libsoletta-flow-module-accelerometer
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: Accelerometer flow module for libsoletta.
+ This package contains the accelerometer flow module for libsoletta. The
+ module provides flow nodes for accelerometers such as ADXL345 and
+ LSM303DLHC.
+
+Package: libsoletta-flow-module-am2315
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: AM2315 flow module for libsoletta.
+ This package contains the AM2315 flow module for libsoletta. The module
+ provides flow nodes that output AM2315 sensor readings (temperature
+ and humidity).
+
+Package: libsoletta-flow-module-calamari
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: Calamari flow module for libsoletta.
+ This package contains the calamari flow module for libsoletta. The module
+ provides flow nodes for doing I/O on the Calamari board
+ (http://elinux.org/Calamari_Lure) components.
+
+Package: libsoletta-flow-module-compass
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: Compass flow module for libsoletta.
+ This package contains the compass flow module for libsoletta. The module
+ provides a compass node that takes direction-vectors of given
+ accelerometer and a magnetometer nodes and outputs heading towards
+ Magnetic North Pole, in degrees.
+
+Package: libsoletta-flow-module-evdev
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: Evdev flow module for libsoletta.
+ This package contains the evdev flow module for libsoletta. The module
+ provides an evdev node that outputs boolean packets after evdev events
+ (being listened) occur.
+
+Package: libsoletta-flow-module-file
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: File flow module for libsoletta.
+ This package contains the file flow module for libsoletta. The module
+ provides a file node meant to read and write data to files
+ (asynchronously).
+
+Package: libsoletta-flow-module-flower-power
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: Flower-power flow module for libsoletta.
+ This package contains the flower-power flow module for libsoletta. The
+ module interfaces with Parrot Flower Power
+ (http://www.parrot.com/usa/products/flower-power/), measuring and
+ analyzing the four elements crucial the health of plants: sunlight,
+ temperature, soil moisture and fertilizer. It fetches plant data via
+ HTTP, using a web service.
+
+Package: libsoletta-flow-module-grove
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: Grove-kit flow module for libsoletta.
+ This package contains the grove flow module for libsoletta. The module
+ provides flow nodes for doing I/O and package conversions for the
+ Grove Starter Kit
+ (http://www.seeedstudio.com/wiki/Grove_-_Starter_Kit_v3) components.
+
+Package: libsoletta-flow-module-gtk
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta, libgtk-3-dev
+Description: Gtk flow module for libsoletta.
+ This package contains the Gtk flow module for libsoletta. The module
+ provides flow nodes for doing I/O of various Soletta basic packet
+ types, for simulation purposes. Both input and output nodes will be
+ Gtk UI elements.
+
+Package: libsoletta-flow-module-gyroscope
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: Gyroscope flow module for libsoletta.
+ This package contains the gyroscope flow module for libsoletta. The
+ module provides a flow node for the L3G4200D gyroscope.
+
+Package: libsoletta-flow-module-iio
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: IIO flow module for libsoletta.
+ This package contains the iio flow module for libsoletta. The module
+ provides an IIO-based gyroscope input flow node. As any IIO device, it
+ can use a buffer to get the readings.
+
+Package: libsoletta-flow-module-keyboard
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: Keyboard flow module for libsoletta.
+ This package contains the keyboard flow module for libsoletta. The module
+ provides flow nodes for keyboard input.
+
+Package: libsoletta-flow-module-led-strip
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: Led-Strip flow module for libsoletta.
+ This package contains the led-strip flow module for libsoletta. The
+ module provides a flow node for the LPD8806 led strip controller.
+
+Package: libsoletta-flow-module-location
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: Location flow module for libsoletta.
+ This package contains the location flow module for libsoletta. The module
+ provides flow nodes interfacing with the free FreeGeoip service, to
+ obtain the location of either a given IP address or the originating
+ address.
+
+Package: libsoletta-flow-module-magnetometer
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: Magnetometer flow module for libsoletta.
+ This package contains the magnetometer flow module for libsoletta. The
+ module provides a flow node for the LSM303DLHC magnetometer.
+
+Package: libsoletta-flow-module-max31855
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: MAX31855 flow module for libsoletta.
+ This package contains the MAX31855 flow module for libsoletta. The module
+ provides a flow node for the MAX31855 temperature reader.
+
+Package: libsoletta-flow-module-network
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: Network flow module for libsoletta.
+ This package contains the network flow module for libsoletta. The module
+ provides a flow node that outputs boolean packets after network
+ connect/disconnect events occur.
+
+Package: libsoletta-flow-module-oic
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: OIC flow module for libsoletta.
+ This package contains the OIC flow module for libsoletta. The module
+ provides server and client flow nodes for Open Interconnect Consortium
+ "brightlight" class of devices.
+
+Package: libsoletta-flow-module-persistence
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: Persistence flow module for libsoletta.
+ This package contains the persistence flow module for libsoletta. The
+ module provides flow nodes for storing/retrieving Soletta basic packet
+ type values on the file system or on EFI variables.
+
+Package: libsoletta-flow-module-piezo-speaker
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: Piezo-speaker flow module for libsoletta.
+ This package contains the piezo-speaker flow module for libsoletta. The
+ module provides a flow node for sound output on (PWM) piezo speakers.
+
+Package: libsoletta-flow-module-process
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: Process flow module for libsoletta.
+ This package contains the process flow module for libsoletta. The module
+ provides flow nodes for spawning a process and connecting its
+ stdin/stdout/stderr back into a flow.
+
+Package: libsoletta-flow-module-servo-motor
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: Servo-motor flow module for libsoletta.
+ This package contains the servo-motor flow module for libsoletta. The
+ module provides a flow node to control servo motors.
+
+Package: libsoletta-flow-module-test
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: Test flow module for libsoletta.
+ This package contains the test flow module for libsoletta. The module
+ provides flow nodes that aids one to write testing/validation flows
+ (checking for expected packet results).
+
+Package: libsoletta-flow-module-thingspeak
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: Thingspeak flow module for libsoletta.
+ This package contains the ThingSpeak flow module for libsoletta. The
+ module provides flow nodes that interface with ThingSpeak -- a service
+ that allows publishing data via HTTP, to be consumed by IoT devices.
+ To use these nodes, one must register and obtain an API key. API keys
+ for channels and talkbacks are different. For the talkback feature,
+ obtaining a Talkback ID is also required.
+
+Package: libsoletta-flow-module-udev
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta, libudev-dev
+Description: Udev flow module for libsoletta.
+ This package contains the udev flow module for libsoletta. The module
+ provides a udev flow node that outputs boolean packets after a devices
+ are attached or detached on the system.
+
+Package: libsoletta-flow-module-unix-socket
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: Unix-socket flow module for libsoletta.
+ This package contains the unix-socket flow module for libsoletta. The
+ module provides I/O flow nodes that aid on isolating flows by means of
+ unix sockets.
+
+Package: libsoletta-flow-metatype-module-js
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: JavaScript flow metatype module for libsoletta.
+ This package contains the JavaScript flow metatype module for libsoletta.
+ The module a JavaScript metatype for flows, i. e., the possibility of
+ declaring new node types with the behavior implemented in that
+ language, directly in .fbp files.
+
+Package: libsoletta-pin-mux-module-galileo
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: Galileo pin-mux module for libsoletta.
+ This package contains the galileo pin-mux module for libsoletta. The
+ module provides pin multiplexing rules/mapping for Galileo boards
+ (revisions D ang G). Without this module, to use Galileo I/O pins with
+ the desired function, one would have to setup them on their own
+ beforehand.
+
+Package: libsoletta-pin-mux-module-edison
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsoletta
+Description: Edison pin-mux module for libsoletta.
+ This package contains the edison pin-mux module for libsoletta. The
+ module provides pin multiplexing rules/mapping for Edison boards
+ (revision C). Without this module, to use Edison I/O pins with the
+ desired function, one would have to setup them on their own
+ beforehand.
