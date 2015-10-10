@@ -1,6 +1,6 @@
 pkgname=soletta-git
 pkgver=master
-pkgrel=1
+pkgrel=2
 conflicts=('soletta')
 
 _gitroot="git://github.com/solettaproject/soletta.git"   
