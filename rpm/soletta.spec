@@ -1,16 +1,16 @@
 %global soletta_major 0
 %global soletta_minor 0
 %global soletta_build 1
-%global soletta_tag beta7
+%global soletta_tag beta8
 
 %global soletta_duktape_tag beta2
 %global soletta_tinycbor_tag 0.2
 
 Summary: A framework for making IoT devices
 Name: soletta
-Version: %{soletta_major}.%{soletta_minor}.%{soletta_build}
-Release: 0.1.%{soletta_tag}%{?dist}
-License: BSD
+Version: %{soletta_major}.%{soletta_minor}.%{soletta_build}.%{soletta_tag}
+Release: 1%{?dist}
+License: BSD and MIT and GPLv2+
 URL: http://github.com/solettaproject/soletta
 Source0: https://github.com/solettaproject/%{name}/archive/v1_%{soletta_tag}.tar.gz#/%{name}-%{version}.tar.gz
 Source1: https://github.com/solettaproject/duktape-release/archive/v1_%{soletta_duktape_tag}.tar.gz#/%{name}-duktape-%{version}.tar.gz
@@ -370,7 +370,7 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 
 %install
 export LIBDIR=%{_libdir}/
-make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mflags} DESTDIR=%{buildroot} INSTALL="install -p" CP="cp -p" install
+make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mflags} DESTDIR=%{buildroot} INSTALL="install -p" install
 
 %check
 make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mflags} check
@@ -381,21 +381,22 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
-%{?%{name}_debug_package}
-
 %files
 %{_libdir}/libsoletta.so.%{soletta_major}
-%{_libdir}/libsoletta.so.%{version}
+%{_libdir}/libsoletta.so.%{soletta_major}.%{soletta_minor}.%{soletta_build}
 %{_bindir}/sol-fbp-runner
-%dir %{_datadir}/soletta
+%{_datadir}/soletta/
 %{_datadir}/soletta/board_detect.json
-%dir %{_libdir}/soletta
-%dir %{_libdir}/soletta/modules
-%dir %{_libdir}/soletta/modules/flow
-%dir %{_libdir}/soletta/modules/flow-metatype
-%dir %{_libdir}/soletta/modules/pin-mux
+%{_libdir}/soletta/
+%{_libdir}/soletta/modules/
+%{_libdir}/soletta/modules/flow/
+%{_libdir}/soletta/modules/flow-metatype/
+%{_libdir}/soletta/modules/pin-mux/
+%{_datadir}/soletta/flow/
+%{_datadir}/soletta/flow/descriptions/
+%{_datadir}/soletta/flow/schemas/
 %if 0%{?fedora} < 23
-%dir %{_libdir}/soletta/modules/linux-micro
+%{_libdir}/soletta/modules/linux-micro/
 %{_libdir}/soletta/modules/linux-micro/initial-services
 %{_libdir}/soletta/modules/linux-micro/bluetooth.so
 %{_libdir}/soletta/modules/linux-micro/console.so
@@ -420,10 +421,6 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %{_bindir}/sol-flow-node-type-validate.py
 %{_bindir}/sol-flow-node-types
 %{_bindir}/sol-oic-gen.py
-%dir %{_datadir}/soletta/flow
-%dir %{_datadir}/soletta/flow/descriptions
-%dir %{_datadir}/soletta/flow/schemas
-%dir %{_includedir}/soletta
 %{_includedir}/soletta/*
 %{_datadir}/gdb/auto-load/*
 %{_libdir}/pkgconfig/soletta.pc
@@ -585,5 +582,5 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 # %%doc %%{_mandir}/man3/*
 
 %changelog
-* Fri Oct 16 2015 Gustavo Lima Chaves <gustavo.lima.chaves@intel.com> - 0.0.1-beta7
-- first build for Fedora 22
+* Tue Oct 20 2015 Gustavo Lima Chaves <gustavo.lima.chaves@intel.com> - 0.0.1.beta8-1
+- first rpm build
