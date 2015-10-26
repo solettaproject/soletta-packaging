@@ -1,10 +1,12 @@
 %global soletta_major 0
 %global soletta_minor 0
 %global soletta_build 1
-%global soletta_tag beta8
+%global soletta_tag beta10
 
+%global soletta_duktape_version 1.2.2
 %global soletta_duktape_tag beta2
-%global soletta_tinycbor_tag 0.2
+
+%global soletta_tinycbor_version 0.2
 
 Summary: A framework for making IoT devices
 Name: soletta
@@ -14,7 +16,9 @@ License: BSD and MIT and GPLv2+
 URL: http://github.com/solettaproject/soletta
 Source0: https://github.com/solettaproject/%{name}/archive/v1_%{soletta_tag}.tar.gz#/%{name}-%{version}.tar.gz
 Source1: https://github.com/solettaproject/duktape-release/archive/v1_%{soletta_duktape_tag}.tar.gz#/%{name}-duktape-%{version}.tar.gz
-Source2: https://github.com/01org/tinycbor/archive/v%{soletta_tinycbor_tag}.tar.gz#/%{name}-tinycbor-%{version}.tar.gz
+Source2: https://github.com/01org/tinycbor/archive/v%{soletta_tinycbor_version}.tar.gz#/%{name}-tinycbor-%{version}.tar.gz
+Provides: bundled(tinycbor) = %{soletta_tinycbor_version}
+Provides: bundled(duktape) = %{soletta_duktape_version}
 BuildRequires: gtk3-devel
 BuildRequires: libcurl-devel
 BuildRequires: libicu-devel
@@ -31,66 +35,66 @@ library developers can easily write software for devices that control
 actuators/sensors and communicate using standard technologies. It
 enables adding smartness even on the smallest edge devices.
 
-%package %{name}-flow-module-accelerometer
+%package flow-module-accelerometer
 Summary: Accelerometer flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-accelerometer
+%description flow-module-accelerometer
 This package contains the accelerometer flow module for %{name}. The
 module provides flow nodes for accelerometers such as ADXL345 and
 LSM303DLHC.
 
-%package %{name}-flow-module-am2315
+%package flow-module-am2315
 Summary: AM2315 flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-am2315
+%description flow-module-am2315
 This package contains the AM2315 flow module for %{name}. The module
 provides flow nodes that output AM2315 sensor readings (temperature
 and humidity).
 
-%package %{name}-flow-module-calamari
+%package flow-module-calamari
 Summary: Calamari flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-calamari
+%description flow-module-calamari
 This package contains the calamari flow module for %{name}. The module
 provides flow nodes for doing I/O on the Calamari board
 (http://elinux.org/Calamari_Lure) components.
 
-%package %{name}-flow-module-compass
+%package flow-module-compass
 Summary: Compass flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-compass
+%description flow-module-compass
 This package contains the compass flow module for %{name}. The module
 provides a compass node that takes direction-vectors of given
 accelerometer and a magnetometer nodes and outputs heading towards
 Magnetic North Pole, in degrees.
 
-%package %{name}-flow-module-evdev
+%package flow-module-evdev
 Summary: Evdev flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-evdev
+%description flow-module-evdev
 This package contains the evdev flow module for %{name}. The module
 provides an evdev node that outputs boolean packets after evdev events
 (being listened) occur.
 
-%package %{name}-flow-module-file
+%package flow-module-file
 Summary: File flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-file
+%description flow-module-file
 This package contains the file flow module for %{name}. The module
 provides a file node meant to read and write data to files
 (asynchronously).
 
-%package %{name}-flow-module-flower-power
+%package flow-module-flower-power
 Summary: Flower-power flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-flower-power
+%description flow-module-flower-power
 This package contains the flower-power flow module for %{name}. The
 module interfaces with Parrot Flower Power
 (http://www.parrot.com/usa/products/flower-power/), measuring and
@@ -98,40 +102,49 @@ analyzing the four elements crucial the health of plants: sunlight,
 temperature, soil moisture and fertilizer. It fetches plant data via
 HTTP, using a web service.
 
-%package %{name}-flow-module-grove
+%package flow-module-form
+Summary: Form flow module for %{name}
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description flow-module-form
+This package contains the form flow module for %{name}. The modul
+eprovides nodes producing formatted, string output to feed LCD
+displays, getting input from buttons.
+
+%package flow-module-grove
 Summary: Grove flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-grove
+%description flow-module-grove
 This package contains the grove flow module for %{name}. The module
 provides flow nodes for doing I/O and package conversions for the
 Grove Starter Kit
 (http://www.seeedstudio.com/wiki/Grove_-_Starter_Kit_v3) components.
 
-%package %{name}-flow-module-gtk
+%package flow-module-gtk
 Summary: Gtk flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: gtk3
 
-%description %{name}-flow-module-gtk
+%description flow-module-gtk
 This package contains the Gtk flow module for %{name}. The module
 provides flow nodes for doing I/O of various Soletta basic packet
 types, for simulation purposes. Both input and output nodes will be
 Gtk UI elements.
 
-%package %{name}-flow-module-gyroscope
+%package flow-module-gyroscope
 Summary: Gyroscope flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-gyroscope
+%description flow-module-gyroscope
 This package contains the gyroscope flow module for %{name}. The
 module provides a flow node for the L3G4200D gyroscope.
 
-%package %{name}-flow-module-http-client
+%package flow-module-http-client
 Summary: HTTP client flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-http-client
+%description flow-module-http-client
 This package contains the HTTP-client flow module for %{name}. The
 module provides flow nodes that fetch and output the basic packet
 types of Soletta, to be combined with the respective server nodes. It
@@ -139,144 +152,144 @@ also provides nodes that fetch arbitrary URL contents and output them
 as either string or blob packets.
 
 %if 0%{?fedora} >= 23
-%package %{name}-flow-module-http-server
+%package flow-module-http-server
 Summary: HTTP server flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-http-server
+%description flow-module-http-server
 This package contains the HTTP-server flow module for %{name}. The
 module provides flow nodes that serve the basic packet
 types of Soletta, to be combined with the respective client nodes. It
 also provides a node to serve static files.
 %endif
 
-%package %{name}-flow-module-iio
+%package flow-module-iio
 Summary: IIO flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-iio
+%description flow-module-iio
 This package contains the iio flow module for %{name}. The module
 provides an IIO-based gyroscope input flow node. As any IIO device, it
 can use a buffer to get the readings.
 
-%package %{name}-flow-module-json
+%package flow-module-json
 Summary: JSON flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-json
+%description flow-module-json
 This package contains the json flow module for %{name}. The module
 provides nodes to manipulate JSON packets, like retrieving arbitrary
 content of the JSON object and output that in an appropriate port,
 count the number of object fields, etc.
 
-%package %{name}-flow-module-keyboard
+%package flow-module-keyboard
 Summary: Keyboard flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-keyboard
+%description flow-module-keyboard
 This package contains the keyboard flow module for %{name}. The module
 provides flow nodes for keyboard input.
 
-%package %{name}-flow-module-led-strip
+%package flow-module-led-strip
 Summary: Led-Strip flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-led-strip
+%description flow-module-led-strip
 This package contains the led-strip flow module for %{name}. The
 module provides a flow node for the LPD8806 led strip controller.
 
-%package %{name}-flow-module-location
+%package flow-module-location
 Summary: Location flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-location
+%description flow-module-location
 This package contains the location flow module for %{name}. The module
 provides flow nodes interfacing with the free FreeGeoip service, to
 obtain the location of either a given IP address or the originating
 address.
 
-%package %{name}-flow-module-magnetometer
+%package flow-module-magnetometer
 Summary: Magnetometer flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-magnetometer
+%description flow-module-magnetometer
 This package contains the magnetometer flow module for %{name}. The
 module provides a flow node for the LSM303DLHC magnetometer.
 
-%package %{name}-flow-module-max31855
+%package flow-module-max31855
 Summary: MAX31855 flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-max31855
+%description flow-module-max31855
 This package contains the MAX31855 flow module for %{name}. The module
 provides a flow node for the MAX31855 temperature reader.
 
-%package %{name}-flow-module-network
+%package flow-module-network
 Summary: Network flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-network
+%description flow-module-network
 This package contains the network flow module for %{name}. The module
 provides a flow node that outputs boolean packets after network
 connect/disconnect events occur.
 
-%package %{name}-flow-module-oic
+%package flow-module-oic
 Summary: OIC flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-oic
+%description flow-module-oic
 This package contains the OIC flow module for %{name}. The module
 provides server and client flow nodes for Open Interconnect Consortium
 "brightlight" class of devices.
 
-%package %{name}-flow-module-persistence
+%package flow-module-persistence
 Summary: Persistence flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-persistence
+%description flow-module-persistence
 This package contains the persistence flow module for %{name}. The
 module provides flow nodes for storing/retrieving Soletta basic packet
 type values on the file system or on EFI variables.
 
-%package %{name}-flow-module-piezo-speaker
+%package flow-module-piezo-speaker
 Summary: Piezo-speaker flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-piezo-speaker
+%description flow-module-piezo-speaker
 This package contains the piezo-speaker flow module for %{name}. The
 module provides a flow node for sound output on (PWM) piezo speakers.
 
-%package %{name}-flow-module-process
+%package flow-module-process
 Summary: Process flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-process
+%description flow-module-process
 This package contains the process flow module for %{name}. The module
 provides flow nodes for spawning a process and connecting its
 stdin/stdout/stderr back into a flow.
 
-%package %{name}-flow-module-servo-motor
+%package flow-module-servo-motor
 Summary: Servo-motor flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-servo-motor
+%description flow-module-servo-motor
 This package contains the servo-motor flow module for %{name}. The
 module provides a flow node to control servo motors.
 
-%package %{name}-flow-module-test
+%package flow-module-test
 Summary: Test flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-test
+%description flow-module-test
 This package contains the test flow module for %{name}. The module
 provides flow nodes that aids one to write testing/validation flows
 (checking for expected packet results).
 
-%package %{name}-flow-module-thingspeak
+%package flow-module-thingspeak
 Summary: ThingSpeak flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-thingspeak
+%description flow-module-thingspeak
 This package contains the ThingSpeak flow module for %{name}. The
 module provides flow nodes that interface with ThingSpeak -- a service
 that allows publishing data via HTTP, to be consumed by IoT devices.
@@ -284,63 +297,63 @@ To use these nodes, one must register and obtain an API key. API keys
 for channels and talkbacks are different. For the talkback feature,
 obtaining a Talkback ID is also required.
 
-%package %{name}-flow-module-udev
+%package flow-module-udev
 Summary: Udev flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: udev
 
-%description %{name}-flow-module-udev
+%description flow-module-udev
 This package contains the udev flow module for %{name}. The module
 provides a udev flow node that outputs boolean packets after a devices
 are attached or detached on the system.
 
-%package %{name}-flow-module-unix-socket
+%package flow-module-unix-socket
 Summary: Unix-socket flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-module-unix-socket
+%description flow-module-unix-socket
 This package contains the unix-socket flow module for %{name}. The
 module provides I/O flow nodes that aid on isolating flows by means of
 unix sockets.
 
-%package %{name}-flow-metatype-module-js
+%package flow-metatype-module-js
 Summary: JavaScript flow metatype module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-flow-metatype-module-js
+%description flow-metatype-module-js
 This package contains the JavaScript flow metatype module for %{name}.
 The module a JavaScript metatype for flows, i. e., the possibility of
 declaring new node types with the behavior implemented in that
 language, directly in .fbp files.
 
-%package %{name}-pin-mux-module-galileo
+%package pin-mux-module-galileo
 Summary: Galileo pin-mux module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-pin-mux-module-galileo
+%description pin-mux-module-galileo
 This package contains the galileo pin-mux module for %{name}. The
 module provides pin multiplexing rules/mapping for Galileo boards
 (revisions D ang G). Without this module, to use Galileo I/O pins with
 the desired function, one would have to setup them on their own
 beforehand.
 
-%package %{name}-pin-mux-module-edison
+%package pin-mux-module-edison
 Summary: Edison pin-mux module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
-%description %{name}-pin-mux-module-edison
+%description pin-mux-module-edison
 This package contains the edison pin-mux module for %{name}. The
 module provides pin multiplexing rules/mapping for Edison boards
 (revision C). Without this module, to use Edison I/O pins with the
 desired function, one would have to setup them on their own
 beforehand.
 
-%package %{name}-devel
+%package devel
 Summary: Header files, libraries and development documentation for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: python3 >= 3.4
 
-%description %{name}-devel
+%description devel
 This package contains the header files, static libraries and
 development documentation for %{name}. If you like to develop programs
 using %{name}, you will need to install %{name}-devel.
@@ -359,7 +372,7 @@ using %{name}, you will need to install %{name}-devel.
 %setup -T -D -a 1 -qn %{name}-1_%{soletta_tag}
 %setup -T -D -a 2 -qn %{name}-1_%{soletta_tag}
 mv duktape-release-1_%{soletta_duktape_tag}/* src/thirdparty/duktape
-mv tinycbor-%{soletta_tinycbor_tag}/* src/thirdparty/tinycbor
+mv tinycbor-%{soletta_tinycbor_version}/* src/thirdparty/tinycbor
 
 %build
 export LIBDIR=%{_libdir}/
@@ -385,18 +398,18 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %{_libdir}/libsoletta.so.%{soletta_major}
 %{_libdir}/libsoletta.so.%{soletta_major}.%{soletta_minor}.%{soletta_build}
 %{_bindir}/sol-fbp-runner
-%{_datadir}/soletta/
+%dir %{_datadir}/soletta/
 %{_datadir}/soletta/board_detect.json
-%{_libdir}/soletta/
-%{_libdir}/soletta/modules/
-%{_libdir}/soletta/modules/flow/
-%{_libdir}/soletta/modules/flow-metatype/
-%{_libdir}/soletta/modules/pin-mux/
-%{_datadir}/soletta/flow/
-%{_datadir}/soletta/flow/descriptions/
-%{_datadir}/soletta/flow/schemas/
+%dir %{_libdir}/soletta/
+%dir %{_libdir}/soletta/modules/
+%dir %{_libdir}/soletta/modules/flow/
+%dir %{_libdir}/soletta/modules/flow-metatype/
+%dir %{_libdir}/soletta/modules/pin-mux/
+%dir %{_datadir}/soletta/flow/
+%dir %{_datadir}/soletta/flow/descriptions/
+%dir %{_datadir}/soletta/flow/schemas/
 %if 0%{?fedora} < 23
-%{_libdir}/soletta/modules/linux-micro/
+%dir %{_libdir}/soletta/modules/linux-micro/
 %{_libdir}/soletta/modules/linux-micro/initial-services
 %{_libdir}/soletta/modules/linux-micro/bluetooth.so
 %{_libdir}/soletta/modules/linux-micro/console.so
@@ -413,15 +426,14 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 
 %license COPYING
 
-%files %{name}-devel
+%files devel
 %{_libdir}/libsoletta.so
 %{_bindir}/sol-fbp-generator
 %{_bindir}/sol-fbp-to-dot
 %{_bindir}/sol-flow-node-type-gen.py
 %{_bindir}/sol-flow-node-type-validate.py
-%{_bindir}/sol-flow-node-types
 %{_bindir}/sol-oic-gen.py
-%{_includedir}/soletta/*
+%{_includedir}/soletta/
 %{_datadir}/gdb/auto-load/*
 %{_libdir}/pkgconfig/soletta.pc
 %{_datadir}/soletta/flow/schemas/node-type-genspec.schema
@@ -449,132 +461,136 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %{_datadir}/soletta/flow/descriptions/trigonometry.json
 %{_datadir}/soletta/flow/descriptions/wallclock.json
 
-%files %{name}-flow-module-accelerometer
+%files flow-module-accelerometer
 %{_libdir}/soletta/modules/flow/accelerometer.so
 %{_datadir}/soletta/flow/descriptions/accelerometer.json
 
-%files %{name}-flow-module-am2315
+%files flow-module-am2315
 %{_libdir}/soletta/modules/flow/am2315.so
 %{_datadir}/soletta/flow/descriptions/am2315.json
 
-%files %{name}-flow-module-calamari
+%files flow-module-calamari
 %{_libdir}/soletta/modules/flow/calamari.so
 %{_datadir}/soletta/flow/descriptions/calamari.json
 
-%files %{name}-flow-module-compass
+%files flow-module-compass
 %{_libdir}/soletta/modules/flow/compass.so
 %{_datadir}/soletta/flow/descriptions/compass.json
 
-%files %{name}-flow-module-evdev
+%files flow-module-evdev
 %{_libdir}/soletta/modules/flow/evdev.so
 %{_datadir}/soletta/flow/descriptions/evdev.json
 
-%files %{name}-flow-module-file
+%files flow-module-file
 %{_libdir}/soletta/modules/flow/file.so
 %{_datadir}/soletta/flow/descriptions/file.json
 
-%files %{name}-flow-module-flower-power
+%files flow-module-flower-power
 %{_libdir}/soletta/modules/flow/flower-power.so
 %{_datadir}/soletta/flow/descriptions/flower-power.json
 
-%files %{name}-flow-module-grove
+%files flow-module-form
+%{_libdir}/soletta/modules/flow/form.so
+%{_datadir}/soletta/flow/descriptions/form.json
+
+%files flow-module-grove
 %{_libdir}/soletta/modules/flow/grove.so
 %{_datadir}/soletta/flow/descriptions/grove.json
 
-%files %{name}-flow-module-gtk
+%files flow-module-gtk
 %{_libdir}/soletta/modules/flow/gtk.so
 %{_datadir}/soletta/flow/descriptions/gtk.json
 
-%files %{name}-flow-module-gyroscope
+%files flow-module-gyroscope
 %{_libdir}/soletta/modules/flow/gyroscope.so
 %{_datadir}/soletta/flow/descriptions/gyroscope.json
 
-%files %{name}-flow-module-http-client
+%files flow-module-http-client
 %{_libdir}/soletta/modules/flow/http-client.so
 %{_datadir}/soletta/flow/descriptions/http-client.json
 
 %if 0%{?fedora} >= 23
-%files %{name}-flow-module-http-server
+%files flow-module-http-server
 %{_libdir}/soletta/modules/flow/http-server.so
 %{_datadir}/soletta/flow/descriptions/http-server.json
 %endif
 
-%files %{name}-flow-module-iio
+%files flow-module-iio
 %{_libdir}/soletta/modules/flow/iio.so
 %{_datadir}/soletta/flow/descriptions/iio.json
 
-%files %{name}-flow-module-json
+%files flow-module-json
 %{_libdir}/soletta/modules/flow/json.so
 %{_datadir}/soletta/flow/descriptions/json.json
 
-%files %{name}-flow-module-keyboard
+%files flow-module-keyboard
 %{_libdir}/soletta/modules/flow/keyboard.so
 %{_datadir}/soletta/flow/descriptions/keyboard.json
 
-%files %{name}-flow-module-led-strip
+%files flow-module-led-strip
 %{_libdir}/soletta/modules/flow/led-strip.so
 %{_datadir}/soletta/flow/descriptions/led-strip.json
 
-%files %{name}-flow-module-location
+%files flow-module-location
 %{_libdir}/soletta/modules/flow/location.so
 %{_datadir}/soletta/flow/descriptions/location.json
 
-%files %{name}-flow-module-magnetometer
+%files flow-module-magnetometer
 %{_libdir}/soletta/modules/flow/magnetometer.so
 %{_datadir}/soletta/flow/descriptions/magnetometer.json
 
-%files %{name}-flow-module-max31855
+%files flow-module-max31855
 %{_libdir}/soletta/modules/flow/max31855.so
 %{_datadir}/soletta/flow/descriptions/max31855.json
 
-%files %{name}-flow-module-network
+%files flow-module-network
 %{_libdir}/soletta/modules/flow/network.so
 %{_datadir}/soletta/flow/descriptions/network.json
 
-%files %{name}-flow-module-oic
+%files flow-module-oic
 %{_libdir}/soletta/modules/flow/oic.so
 %{_datadir}/soletta/flow/descriptions/oic.json
 
-%files %{name}-flow-module-persistence
+%files flow-module-persistence
 %{_libdir}/soletta/modules/flow/persistence.so
 %{_datadir}/soletta/flow/descriptions/persistence.json
 
-%files %{name}-flow-module-piezo-speaker
+%files flow-module-piezo-speaker
 %{_libdir}/soletta/modules/flow/piezo-speaker.so
 %{_datadir}/soletta/flow/descriptions/piezo-speaker.json
 
-%files %{name}-flow-module-process
+%files flow-module-process
 %{_libdir}/soletta/modules/flow/process.so
 %{_datadir}/soletta/flow/descriptions/process.json
 
-%files %{name}-flow-module-servo-motor
+%files flow-module-servo-motor
 %{_libdir}/soletta/modules/flow/servo-motor.so
 %{_datadir}/soletta/flow/descriptions/servo-motor.json
 
-%files %{name}-flow-module-test
+%files flow-module-test
 %{_libdir}/soletta/modules/flow/test.so
 %{_datadir}/soletta/flow/descriptions/test.json
 
-%files %{name}-flow-module-thingspeak
+%files flow-module-thingspeak
 %{_libdir}/soletta/modules/flow/thingspeak.so
 %{_datadir}/soletta/flow/descriptions/thingspeak.json
 
-%files %{name}-flow-module-udev
+%files flow-module-udev
 %{_libdir}/soletta/modules/flow/udev.so
 %{_datadir}/soletta/flow/descriptions/udev.json
 
-%files %{name}-flow-module-unix-socket
+%files flow-module-unix-socket
 %{_libdir}/soletta/modules/flow/unix-socket.so
 %{_datadir}/soletta/flow/descriptions/unix-socket.json
 
-%files %{name}-flow-metatype-module-js
+%files flow-metatype-module-js
 %{_libdir}/soletta/modules/flow-metatype/js.so
 
-%files %{name}-pin-mux-module-galileo
+%files pin-mux-module-galileo
 %{_libdir}/soletta/modules/pin-mux/intel-galileo-rev-d.so
 %{_libdir}/soletta/modules/pin-mux/intel-galileo-rev-g.so
 
-%files %{name}-pin-mux-module-edison
+%files pin-mux-module-edison
 %{_libdir}/soletta/modules/pin-mux/intel-edison-rev-c.so
 
 # TODO: should we generate man pages from doxygen tags?
@@ -582,5 +598,21 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 # %%doc %%{_mandir}/man3/*
 
 %changelog
+* Mon Oct 26 2015 Gustavo Lima Chaves <gustavo.lima.chaves@intel.com> - 0.0.1.beta10-1
+- Bump Soletta version to 0.0.1.beta10
+- Fix RPM spec to sign bundled packages tinycbor and duktape
+- Fix RPM package naming
+- Add new flow-module: form
+- The json module got a ton of new features and nodes
+- string/concatenate node now supports mulitple inputs (up to 23)
+- and/or logic nodes now accept multiple (up to 32) input connections
+- The int module nodes now send new output packets on input changes
+- Multicast packets are now sent to all machine interfaces
+- The HTTP server node got some fixes, like recognizing more header fields
+- The float/map node got a fix that led to bad conversions on ARM machines
+- The form module got a new node: the boolean form.
+- Legacy tool sol-flow-node types is now gone.
+- file/writer node got some bad data access errors fixed.
+
 * Tue Oct 20 2015 Gustavo Lima Chaves <gustavo.lima.chaves@intel.com> - 0.0.1.beta8-1
 - first rpm build
