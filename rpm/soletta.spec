@@ -1,7 +1,7 @@
 %global soletta_major 0
 %global soletta_minor 0
 %global soletta_build 1
-%global soletta_tag beta10
+%global soletta_tag beta13
 
 %global soletta_duktape_version 1.2.2
 %global soletta_duktape_tag beta2
@@ -10,9 +10,27 @@
 
 Summary: A framework for making IoT devices
 Name: soletta
-Version: %{soletta_major}.%{soletta_minor}.%{soletta_build}.%{soletta_tag}
-Release: 1%{?dist}
-License: BSD and MIT and GPLv2+
+Version: %{soletta_major}.%{soletta_minor}.%{soletta_build}
+Release: %{soletta_tag}.1%{?dist}
+# BSD License:
+#       builders/*
+#       tools/*
+#       data/*
+#       src/*
+#       doc/* (exceptions below)
+# MIT License:
+#       src/thirdparty/duktape/*
+#       src/thirdparty/tinycbor/*
+#       doc/node-types-html/jquery-ui.min.css
+#       doc/node-types-html/js/frameworks/* (exceptions below)
+# GPLv2+:
+#       tools/kconfig/*
+#       doc/node-types-html/js/frameworks/isotope.pkgd.min.js
+# PSF:
+#       src/modules/flow/converter/string-format.c
+#       src/modules/flow/string/string-replace-ascii.c
+#       src/modules/flow/string/string-replace-icu.c
+License: BSD and MIT and GPLv2+ and PSF
 URL: http://github.com/solettaproject/soletta
 Source0: https://github.com/solettaproject/%{name}/archive/v1_%{soletta_tag}.tar.gz#/%{name}-%{version}.tar.gz
 Source1: https://github.com/solettaproject/duktape-release/archive/v1_%{soletta_duktape_tag}.tar.gz#/%{name}-duktape-%{version}.tar.gz
@@ -22,7 +40,9 @@ Provides: bundled(duktape) = %{soletta_duktape_version}
 BuildRequires: gtk3-devel
 BuildRequires: libcurl-devel
 BuildRequires: libicu-devel
+%if 0%{?fedora} > 23
 BuildRequires: libmicrohttpd-devel
+%endif
 BuildRequires: mosquitto-devel
 BuildRequires: pcre-devel
 BuildRequires: systemd-devel
@@ -107,8 +127,8 @@ Summary: Form flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description flow-module-form
-This package contains the form flow module for %{name}. The modul
-eprovides nodes producing formatted, string output to feed LCD
+This package contains the form flow module for %{name}. The module
+provides nodes producing formatted, string output to feed LCD
 displays, getting input from buttons.
 
 %package flow-module-grove
@@ -151,7 +171,7 @@ types of Soletta, to be combined with the respective server nodes. It
 also provides nodes that fetch arbitrary URL contents and output them
 as either string or blob packets.
 
-%if 0%{?fedora} >= 23
+%if 0%{?fedora} > 23
 %package flow-module-http-server
 Summary: HTTP server flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
@@ -189,6 +209,34 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 %description flow-module-keyboard
 This package contains the keyboard flow module for %{name}. The module
 provides flow nodes for keyboard input.
+
+%package flow-module-mqtt
+Summary: MQTT flow module for %{name}
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description flow-module-mqtt
+This package contains the mqtt flow module for %{name}. The module
+provides a flow node implementing a MQTT client.
+
+# We depend on http-server for the oauth node
+%if 0%{?fedora} > 23
+%package flow-module-oauth
+Summary: OAuth flow module for %{name}
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description flow-module-oauth
+This package contains the oauth flow module for %{name}. The module
+provides a flow nodes to negotiate an OAuth access token.
+%endif
+
+%package flow-module-power-supply
+Summary: Power supply flow module for %{name}
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description flow-module-power-supply
+This package contains the power supply flow module for %{name}. The
+module provides flow nodes to list and query information from all
+power supplies of the system.
 
 %package flow-module-led-strip
 Summary: Led-Strip flow module for %{name}
@@ -316,6 +364,15 @@ This package contains the unix-socket flow module for %{name}. The
 module provides I/O flow nodes that aid on isolating flows by means of
 unix sockets.
 
+%package flow-module-update
+Summary: Update flow module for %{name}
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description flow-module-update
+This package contains the update flow module for %{name}. The module
+provides flow nodes that assist on checking availability of, fetching
+and installing Soletta-application updates.
+
 %package flow-metatype-module-js
 Summary: JavaScript flow metatype module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
@@ -332,9 +389,9 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description pin-mux-module-galileo
 This package contains the galileo pin-mux module for %{name}. The
-module provides pin multiplexing rules/mapping for Galileo boards
-(revisions D ang G). Without this module, to use Galileo I/O pins with
-the desired function, one would have to setup them on their own
+module provides pin multiplexing rules/mapping for Galileo boards (all
+revisions). Without this module, to use Galileo I/O pins with the
+desired function, one would have to setup them on their own
 beforehand.
 
 %package pin-mux-module-edison
@@ -374,11 +431,18 @@ using %{name}, you will need to install %{name}-devel.
 mv duktape-release-1_%{soletta_duktape_tag}/* src/thirdparty/duktape
 mv tinycbor-%{soletta_tinycbor_version}/* src/thirdparty/tinycbor
 
+# FIXME: put in V=1 on the the builds make, after the "entry->size
+# issue is sorted out"
+
 %build
 export LIBDIR=%{_libdir}/
 make alldefconfig
 sed -i 's/CONFIG_CFLAGS=\"\"/CONFIG_CFLAGS=\"-g\"/g' .config
 sed -i 's/_SAMPLES=y/_SAMPLES=n/g' .config
+%if 0%{?fedora} <= 23
+# Don't bother testing http-server if we won't build it
+find ./src/test-fbp/ -type f -print0 | xargs -0 grep -l "http-server" | xargs rm
+%endif
 make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mflags}
 
 %install
@@ -395,11 +459,13 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %postun -p /sbin/ldconfig
 
 %files
+# BSD License
 %{_libdir}/libsoletta.so.%{soletta_major}
 %{_libdir}/libsoletta.so.%{soletta_major}.%{soletta_minor}.%{soletta_build}
 %{_bindir}/sol-fbp-runner
 %dir %{_datadir}/soletta/
-%{_datadir}/soletta/board_detect.json
+%dir %{_datadir}/soletta/boards
+%{_datadir}/soletta/boards/50-default.json
 %dir %{_libdir}/soletta/
 %dir %{_libdir}/soletta/modules/
 %dir %{_libdir}/soletta/modules/flow/
@@ -427,6 +493,7 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %license COPYING
 
 %files devel
+# BSD License
 %{_libdir}/libsoletta.so
 %{_bindir}/sol-fbp-generator
 %{_bindir}/sol-fbp-to-dot
@@ -462,135 +529,190 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %{_datadir}/soletta/flow/descriptions/wallclock.json
 
 %files flow-module-accelerometer
+# BSD License
 %{_libdir}/soletta/modules/flow/accelerometer.so
 %{_datadir}/soletta/flow/descriptions/accelerometer.json
 
 %files flow-module-am2315
+# BSD License
 %{_libdir}/soletta/modules/flow/am2315.so
 %{_datadir}/soletta/flow/descriptions/am2315.json
 
 %files flow-module-calamari
+# BSD License
 %{_libdir}/soletta/modules/flow/calamari.so
 %{_datadir}/soletta/flow/descriptions/calamari.json
 
 %files flow-module-compass
+# BSD License
 %{_libdir}/soletta/modules/flow/compass.so
 %{_datadir}/soletta/flow/descriptions/compass.json
 
 %files flow-module-evdev
+# BSD License
 %{_libdir}/soletta/modules/flow/evdev.so
 %{_datadir}/soletta/flow/descriptions/evdev.json
 
 %files flow-module-file
+# BSD License
 %{_libdir}/soletta/modules/flow/file.so
 %{_datadir}/soletta/flow/descriptions/file.json
 
 %files flow-module-flower-power
+# BSD License
 %{_libdir}/soletta/modules/flow/flower-power.so
 %{_datadir}/soletta/flow/descriptions/flower-power.json
 
 %files flow-module-form
+# BSD License
 %{_libdir}/soletta/modules/flow/form.so
 %{_datadir}/soletta/flow/descriptions/form.json
 
 %files flow-module-grove
+# BSD License
 %{_libdir}/soletta/modules/flow/grove.so
 %{_datadir}/soletta/flow/descriptions/grove.json
 
 %files flow-module-gtk
+# BSD License
 %{_libdir}/soletta/modules/flow/gtk.so
 %{_datadir}/soletta/flow/descriptions/gtk.json
 
 %files flow-module-gyroscope
+# BSD License
 %{_libdir}/soletta/modules/flow/gyroscope.so
 %{_datadir}/soletta/flow/descriptions/gyroscope.json
 
 %files flow-module-http-client
+# BSD License
 %{_libdir}/soletta/modules/flow/http-client.so
 %{_datadir}/soletta/flow/descriptions/http-client.json
 
-%if 0%{?fedora} >= 23
+%if 0%{?fedora} > 23
 %files flow-module-http-server
+# BSD License
 %{_libdir}/soletta/modules/flow/http-server.so
 %{_datadir}/soletta/flow/descriptions/http-server.json
 %endif
 
 %files flow-module-iio
+# BSD License
 %{_libdir}/soletta/modules/flow/iio.so
 %{_datadir}/soletta/flow/descriptions/iio.json
 
 %files flow-module-json
+# BSD License
 %{_libdir}/soletta/modules/flow/json.so
 %{_datadir}/soletta/flow/descriptions/json.json
 
 %files flow-module-keyboard
+# BSD License
 %{_libdir}/soletta/modules/flow/keyboard.so
 %{_datadir}/soletta/flow/descriptions/keyboard.json
 
+%files flow-module-mqtt
+# BSD License
+%{_libdir}/soletta/modules/flow/mqtt.so
+%{_datadir}/soletta/flow/descriptions/mqtt.json
+
+%if 0%{?fedora} > 23
+%files flow-module-oauth
+# BSD License
+%{_libdir}/soletta/modules/flow/oauth.so
+%{_datadir}/soletta/flow/descriptions/oauth.json
+%endif
+
+%files flow-module-power-supply
+# BSD License
+%{_libdir}/soletta/modules/flow/power-supply.so
+%{_datadir}/soletta/flow/descriptions/power-supply.json
+
 %files flow-module-led-strip
+# BSD License
 %{_libdir}/soletta/modules/flow/led-strip.so
 %{_datadir}/soletta/flow/descriptions/led-strip.json
 
 %files flow-module-location
+# BSD License
 %{_libdir}/soletta/modules/flow/location.so
 %{_datadir}/soletta/flow/descriptions/location.json
 
 %files flow-module-magnetometer
+# BSD License
 %{_libdir}/soletta/modules/flow/magnetometer.so
 %{_datadir}/soletta/flow/descriptions/magnetometer.json
 
 %files flow-module-max31855
+# BSD License
 %{_libdir}/soletta/modules/flow/max31855.so
 %{_datadir}/soletta/flow/descriptions/max31855.json
 
 %files flow-module-network
+# BSD License
 %{_libdir}/soletta/modules/flow/network.so
 %{_datadir}/soletta/flow/descriptions/network.json
 
 %files flow-module-oic
+# BSD License
 %{_libdir}/soletta/modules/flow/oic.so
 %{_datadir}/soletta/flow/descriptions/oic.json
 
 %files flow-module-persistence
+# BSD License
 %{_libdir}/soletta/modules/flow/persistence.so
 %{_datadir}/soletta/flow/descriptions/persistence.json
 
 %files flow-module-piezo-speaker
+# BSD License
 %{_libdir}/soletta/modules/flow/piezo-speaker.so
 %{_datadir}/soletta/flow/descriptions/piezo-speaker.json
 
 %files flow-module-process
+# BSD License
 %{_libdir}/soletta/modules/flow/process.so
 %{_datadir}/soletta/flow/descriptions/process.json
 
 %files flow-module-servo-motor
+# BSD License
 %{_libdir}/soletta/modules/flow/servo-motor.so
 %{_datadir}/soletta/flow/descriptions/servo-motor.json
 
 %files flow-module-test
+# BSD License
 %{_libdir}/soletta/modules/flow/test.so
 %{_datadir}/soletta/flow/descriptions/test.json
 
 %files flow-module-thingspeak
+# BSD License
 %{_libdir}/soletta/modules/flow/thingspeak.so
 %{_datadir}/soletta/flow/descriptions/thingspeak.json
 
 %files flow-module-udev
+# BSD License
 %{_libdir}/soletta/modules/flow/udev.so
 %{_datadir}/soletta/flow/descriptions/udev.json
 
 %files flow-module-unix-socket
+# BSD License
 %{_libdir}/soletta/modules/flow/unix-socket.so
 %{_datadir}/soletta/flow/descriptions/unix-socket.json
 
+%files flow-module-update
+# BSD License
+%{_libdir}/soletta/modules/flow/update.so
+%{_datadir}/soletta/flow/descriptions/update.json
+
 %files flow-metatype-module-js
+# BSD License
 %{_libdir}/soletta/modules/flow-metatype/js.so
 
 %files pin-mux-module-galileo
+# BSD License
 %{_libdir}/soletta/modules/pin-mux/intel-galileo-rev-d.so
 %{_libdir}/soletta/modules/pin-mux/intel-galileo-rev-g.so
 
 %files pin-mux-module-edison
+# BSD License
 %{_libdir}/soletta/modules/pin-mux/intel-edison-rev-c.so
 
 # TODO: should we generate man pages from doxygen tags?
@@ -598,6 +720,54 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 # %%doc %%{_mandir}/man3/*
 
 %changelog
+* Wed Dec 02 2015 Gustavo Lima Chaves <gustavo.lima.chaves@intel.com> - 0.0.1.beta13-1
+- New nodes were added -- http-client/request, http-client/get-json,
+  http-client/create-url, oauth/v1, json/create-array-path,
+  json/create-object-path, power-supply/get-list,
+  power-supply/get-capacity, power-supply/get-info, mqtt/client,
+  update/check, update/fetch, update/install.
+- HTTP module now supports more HTTP methods
+- HTTP server node was removed from the package on Fedora 23, since it
+  demands a much newer version of libmicrohttpd than Fedora provides
+  (and will ever provide at least on Fedora 23, since systemd also
+  depends on it and newer versions change the soname).
+- A new packet types was added -- HTTP response.
+- The float/int option types were changed -- we now have float/int for
+  single numbers of those types and float_spec/int_spec for ranges of
+  those types.
+- Minor bugfixes of the following modules got in: HTTP, flow, int
+  node, build system, memmap-storage, OIC, socket abstraction, random
+  numbers engine, CoAP, json node, platform, general use buffer,
+  message digest, FBP generator, RIOT I/O, timer node.
+- The file sol-pin-mux.h is now installed, as it should be.
+- Board pins can now be addressed by a string label, if backed-up by
+  their pin-mux modules.
+- Thread-safety was added to the RIOT build. Worker threads were
+  added to it too. Finally, a crypto backend was added to that system
+  too.
+- The form family of nodes got a handful of other nodes included:
+  form/int, form/int-custom, form/string.
+- The linux-micro module got gdb-server support, to be used to debug
+  Soletta when running as PID1. It also got two new modules: kmod and
+  automount.
+- The persistence module was changed to an asynchronous implementation.
+- OIC client nodes got a new SCAN port, meant to request scanning of
+  all servers matching the client interface. A new DEVICE_ID output
+  port was also added, that will dispatch the found IDs in that
+  scanning request.
+- The dummy platform implementation was removed.
+- The platform modules got a new mount points manipulation API, as
+  well as a uevent listening one (for Linux).
+- All of our public API with ambiguous int sizes were made explicity
+  with regards to size (e.g. int32_t).
+- An API exposing power supply properties was added to Soletta.
+- An API dealing with certificates was added to Soletta.
+- MQTT in Soletta got TLS connections support.
+- JavaScript code on FBP files now recognize all Soletta package
+  types.
+- A new root module was added to Soletta: update. It controls how
+  Soletta apps will be updated.
+
 * Mon Oct 26 2015 Gustavo Lima Chaves <gustavo.lima.chaves@intel.com> - 0.0.1.beta10-1
 - Bump Soletta version to 0.0.1.beta10
 - Fix RPM spec to sign bundled packages tinycbor and duktape
