@@ -431,9 +431,6 @@ using %{name}, you will need to install %{name}-devel.
 mv duktape-release-1_%{soletta_duktape_tag}/* src/thirdparty/duktape
 mv tinycbor-%{soletta_tinycbor_version}/* src/thirdparty/tinycbor
 
-# FIXME: put in V=1 on the the builds make, after the "entry->size
-# issue is sorted out"
-
 %build
 export LIBDIR=%{_libdir}/
 make alldefconfig
@@ -443,7 +440,7 @@ sed -i 's/_SAMPLES=y/_SAMPLES=n/g' .config
 # Don't bother testing http-server if we won't build it
 find ./src/test-fbp/ -type f -print0 | xargs -0 grep -l "http-server" | xargs rm
 %endif
-make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mflags}
+make V=1 CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mflags}
 
 %install
 export LIBDIR=%{_libdir}/
