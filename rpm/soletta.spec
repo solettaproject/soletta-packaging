@@ -1,46 +1,57 @@
-%global soletta_major 0
-%global soletta_minor 0
-%global soletta_build 1
-%global soletta_tag beta13
+%global soletta_version 1
+%global soletta_current 1
+%global soletta_revision 0
+%global soletta_age 0
 
-%global soletta_duktape_version 1.2.2
-%global soletta_duktape_tag beta2
+%global soletta_major %(echo $(( %{soletta_current} - %{soletta_age} )))
+%global soletta_minor %{soletta_age}
+%global soletta_release %{soletta_revision}
 
+%global soletta_duktape_version 1.4.0
+%global soletta_mavlink_version 1.0.11
 %global soletta_tinycbor_version 0.2
+%global soletta_tinydtls_version 0.8.1
 
 Summary: A framework for making IoT devices
 Name: soletta
-Version: %{soletta_major}.%{soletta_minor}.%{soletta_build}
-Release: %{soletta_tag}.1%{?dist}
-# BSD License:
-#       builders/*
-#       tools/*
+Version: %{soletta_version}
+Release: 1%{?dist}
+# Apache License (ASL):
 #       data/*
+#       doc/*
 #       src/*
-#       doc/* (exceptions below)
-# MIT License:
+#       tools/*  (exceptions below)
+# BSD 2-Clause:
+#       src/thirdparty/oic-data-models/*
+# MIT:
 #       src/thirdparty/duktape/*
 #       src/thirdparty/tinycbor/*
-#       doc/node-types-html/jquery-ui.min.css
+#       src/thirdparty/tinydtls/*
+#       doc/node-types-html/css/jquery-ui.min.css
 #       doc/node-types-html/js/frameworks/* (exceptions below)
-# GPLv2+:
+# LGPL:
+#       src/thirdparty/mavlink/*
+# GPL:
 #       tools/kconfig/*
 #       doc/node-types-html/js/frameworks/isotope.pkgd.min.js
-# PSF:
-#       src/modules/flow/converter/string-format.c
+# Python License:
+#       src/modules/flow/format/string-format.c
 #       src/modules/flow/string/string-replace-ascii.c
 #       src/modules/flow/string/string-replace-icu.c
-License: BSD and MIT and GPLv2+ and PSF
+License: ASL 2.0 and BSD and MIT and LGPLv2+ and GPLv2+ and Python
 URL: http://github.com/solettaproject/soletta
-Source0: https://github.com/solettaproject/%{name}/archive/v1_%{soletta_tag}.tar.gz#/%{name}-%{version}.tar.gz
-Source1: https://github.com/solettaproject/duktape-release/archive/v1_%{soletta_duktape_tag}.tar.gz#/%{name}-duktape-%{version}.tar.gz
-Source2: https://github.com/01org/tinycbor/archive/v%{soletta_tinycbor_version}.tar.gz#/%{name}-tinycbor-%{version}.tar.gz
-Provides: bundled(tinycbor) = %{soletta_tinycbor_version}
+Source0: https://github.com/solettaproject/%{name}/releases/download/v1/%{name}.tar.gz
 Provides: bundled(duktape) = %{soletta_duktape_version}
+Provides: bundled(mavlink) = %{soletta_mavlink_version}
+Provides: bundled(tinycbor) = %{soletta_tinycbor_version}
+Provides: bundled(tinydtls) = %{soletta_tinydtls_version}
 BuildRequires: gtk3-devel
 BuildRequires: libcurl-devel
 BuildRequires: libicu-devel
-%if 0%{?fedora} > 23
+# We need libmicrohttpd >= 0.9.47, actually, but v1 went out without
+# this check. Let's build with it only for future (distro) releases,
+# then
+%if 0%{?fedora} > 24
 BuildRequires: libmicrohttpd-devel
 %endif
 BuildRequires: mosquitto-devel
@@ -54,15 +65,6 @@ Soletta project is a framework for making IoT devices. With Soletta
 library developers can easily write software for devices that control
 actuators/sensors and communicate using standard technologies. It
 enables adding smartness even on the smallest edge devices.
-
-%package flow-module-accelerometer
-Summary: Accelerometer flow module for %{name}
-Requires: %{name}%{?_isa} = %{version}-%{release}
-
-%description flow-module-accelerometer
-This package contains the accelerometer flow module for %{name}. The
-module provides flow nodes for accelerometers such as ADXL345 and
-LSM303DLHC.
 
 %package flow-module-am2315
 Summary: AM2315 flow module for %{name}
@@ -131,6 +133,14 @@ This package contains the form flow module for %{name}. The module
 provides nodes producing formatted, string output to feed LCD
 displays, getting input from buttons.
 
+%package flow-module-format
+Summary: Format flow module for %{name}
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description flow-module-format
+This package contains the format flow module for %{name}. The module
+aggregates those nodes that make use of Python string-formatting code.
+
 %package flow-module-grove
 Summary: Grove flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
@@ -152,14 +162,6 @@ provides flow nodes for doing I/O of various Soletta basic packet
 types, for simulation purposes. Both input and output nodes will be
 Gtk UI elements.
 
-%package flow-module-gyroscope
-Summary: Gyroscope flow module for %{name}
-Requires: %{name}%{?_isa} = %{version}-%{release}
-
-%description flow-module-gyroscope
-This package contains the gyroscope flow module for %{name}. The
-module provides a flow node for the L3G4200D gyroscope.
-
 %package flow-module-http-client
 Summary: HTTP client flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
@@ -171,7 +173,7 @@ types of Soletta, to be combined with the respective server nodes. It
 also provides nodes that fetch arbitrary URL contents and output them
 as either string or blob packets.
 
-%if 0%{?fedora} > 23
+%if 0%{?fedora} > 24
 %package flow-module-http-server
 Summary: HTTP server flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
@@ -202,6 +204,16 @@ provides nodes to manipulate JSON packets, like retrieving arbitrary
 content of the JSON object and output that in an appropriate port,
 count the number of object fields, etc.
 
+%package flow-module-jhd1313m1
+Summary: JHD1313M1 flow module for %{name}
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description flow-module-jhd1313m1
+This package contains the JHD1313M1 flow module for %{name}. The
+module provides nodes giving output to Grove-kit LCD controller
+(JHD1313M1 model), for simple string displaying and backlight color
+setting.
+
 %package flow-module-keyboard
 Summary: Keyboard flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
@@ -219,7 +231,7 @@ This package contains the mqtt flow module for %{name}. The module
 provides a flow node implementing a MQTT client.
 
 # We depend on http-server for the oauth node
-%if 0%{?fedora} > 23
+%if 0%{?fedora} > 24
 %package flow-module-oauth
 Summary: OAuth flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
@@ -256,22 +268,6 @@ provides flow nodes interfacing with the free FreeGeoip service, to
 obtain the location of either a given IP address or the originating
 address.
 
-%package flow-module-magnetometer
-Summary: Magnetometer flow module for %{name}
-Requires: %{name}%{?_isa} = %{version}-%{release}
-
-%description flow-module-magnetometer
-This package contains the magnetometer flow module for %{name}. The
-module provides a flow node for the LSM303DLHC magnetometer.
-
-%package flow-module-max31855
-Summary: MAX31855 flow module for %{name}
-Requires: %{name}%{?_isa} = %{version}-%{release}
-
-%description flow-module-max31855
-This package contains the MAX31855 flow module for %{name}. The module
-provides a flow node for the MAX31855 temperature reader.
-
 %package flow-module-network
 Summary: Network flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
@@ -287,8 +283,8 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description flow-module-oic
 This package contains the OIC flow module for %{name}. The module
-provides server and client flow nodes for Open Interconnect Consortium
-"brightlight" class of devices.
+provides server and client flow nodes for all Open Interconnect
+Consortium classes of devices.
 
 %package flow-module-persistence
 Summary: Persistence flow module for %{name}
@@ -383,6 +379,26 @@ The module a JavaScript metatype for flows, i. e., the possibility of
 declaring new node types with the behavior implemented in that
 language, directly in .fbp files.
 
+%package flow-metatype-module-http-composed-client
+Summary: HTTP-composed-packets flow metatype module for %{name}
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description flow-metatype-module-http-composed-client
+This package contains the HTTP-composed-packets flow metatype module
+for %{name}. The module allows creating HTTP client node types using
+composed packets.
+
+%if 0%{?fedora} > 24
+%package flow-metatype-module-http-composed-server
+Summary: HTTP-composed-packets flow metatype module for %{name}
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description flow-metatype-module-http-composed-server
+This package contains the HTTP-composed-packets flow metatype module
+for %{name}. The module allows creating HTTP server node types using
+composed packets.
+%endif
+
 %package pin-mux-module-galileo
 Summary: Galileo pin-mux module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
@@ -425,23 +441,28 @@ using %{name}, you will need to install %{name}-devel.
 # This package contains the development documentation for %%{name}.
 
 %prep
-%setup -qn %{name}-1_%{soletta_tag}
-%setup -T -D -a 1 -qn %{name}-1_%{soletta_tag}
-%setup -T -D -a 2 -qn %{name}-1_%{soletta_tag}
-mv duktape-release-1_%{soletta_duktape_tag}/* src/thirdparty/duktape
-mv tinycbor-%{soletta_tinycbor_version}/* src/thirdparty/tinycbor
+%setup -qn %{name}
 
 %build
 export LIBDIR=%{_libdir}/
+%if 0%{?fedora} <= 24
+# we gotta wait for v2 for this line to be unnecessary -- avoid a
+# broken http-server for now
+sed -i 's/\"atleast-version\": \"0\.9\.43\"/\"atleast-version\": \"0\.9\.47\"/g' ./data/jsons/dependencies.json
+%endif
+
 make alldefconfig
 sed -i 's/CONFIG_CFLAGS=\"\"/CONFIG_CFLAGS=\"-g\"/g' .config
 sed -i 's/_SAMPLES=y/_SAMPLES=n/g' .config
-# %%if 0%{?fedora} <= 23
-# Don't bother testing http-server if we won't build it (FIXME: we
-# should skip the tests only when not building the http-server node,
-# but the tests are failing anyway as of now)
+sed -i 's/RPATH=y/RPATH=n/g' .config
+
+%if 0%{?fedora} <= 24
+# Don't bother testing http-server (oauth only on samples for now) if
+# we won't build it
 find ./src/test-fbp/ -type f -print0 | xargs -0 grep -l "http-server" | xargs rm
-# %%endif
+# javascript.fbp will go away with the line above, so...
+sed -i '/tests-fbp-bin += $(top_srcdir)src\/test-fbp\/javascript\.fbp/d' ./tools/build/Makefile.vars
+%endif
 make V=1 CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mflags}
 
 %install
@@ -458,9 +479,9 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %postun -p /sbin/ldconfig
 
 %files
-# BSD License
+# Apache License
 %{_libdir}/libsoletta.so.%{soletta_major}
-%{_libdir}/libsoletta.so.%{soletta_major}.%{soletta_minor}.%{soletta_build}
+%{_libdir}/libsoletta.so.%{soletta_major}.%{soletta_minor}.%{soletta_release}
 %{_bindir}/sol-fbp-runner
 %dir %{_datadir}/soletta/
 %dir %{_datadir}/soletta/boards
@@ -473,36 +494,24 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %dir %{_datadir}/soletta/flow/
 %dir %{_datadir}/soletta/flow/descriptions/
 %dir %{_datadir}/soletta/flow/schemas/
-%if 0%{?fedora} < 23
-%dir %{_libdir}/soletta/modules/linux-micro/
-%{_libdir}/soletta/modules/linux-micro/initial-services
-%{_libdir}/soletta/modules/linux-micro/bluetooth.so
-%{_libdir}/soletta/modules/linux-micro/console.so
-%{_libdir}/soletta/modules/linux-micro/dbus.so
-%{_libdir}/soletta/modules/linux-micro/fstab.so
-%{_libdir}/soletta/modules/linux-micro/hostname.so
-%{_libdir}/soletta/modules/linux-micro/locale.so
-%{_libdir}/soletta/modules/linux-micro/machine-id.so
-%{_libdir}/soletta/modules/linux-micro/network-up.so
-%{_libdir}/soletta/modules/linux-micro/rc-d.so
-%{_libdir}/soletta/modules/linux-micro/sysctl.so
-%{_libdir}/soletta/modules/linux-micro/watchdog.so
-%endif
 
 %license COPYING
 
 %files devel
-# BSD License
+# Apache License
 %{_libdir}/libsoletta.so
+%{_bindir}/sol-aio
 %{_bindir}/sol-fbp-generator
 %{_bindir}/sol-fbp-to-dot
+%{_bindir}/sol-flow-node-type-aliases-gen.py
 %{_bindir}/sol-flow-node-type-gen.py
 %{_bindir}/sol-flow-node-type-validate.py
+%{_bindir}/sol-gpio
 %{_bindir}/sol-oic-gen.py
 %{_includedir}/soletta/
 %{_datadir}/gdb/auto-load/*
 %{_libdir}/pkgconfig/soletta.pc
-%{_datadir}/soletta/flow/schemas/node-type-genspec.schema
+%{_datadir}/soletta/flow/aliases/50-default.json
 %{_datadir}/soletta/flow/descriptions/aio.json
 %{_datadir}/soletta/flow/descriptions/app.json
 %{_datadir}/soletta/flow/descriptions/boolean.json
@@ -519,6 +528,7 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %{_datadir}/soletta/flow/descriptions/platform.json
 %{_datadir}/soletta/flow/descriptions/pwm.json
 %{_datadir}/soletta/flow/descriptions/random.json
+%{_datadir}/soletta/flow/descriptions/regexp.json
 %{_datadir}/soletta/flow/descriptions/string.json
 %{_datadir}/soletta/flow/descriptions/switcher.json
 %{_datadir}/soletta/flow/descriptions/temperature.json
@@ -526,192 +536,193 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %{_datadir}/soletta/flow/descriptions/timestamp.json
 %{_datadir}/soletta/flow/descriptions/trigonometry.json
 %{_datadir}/soletta/flow/descriptions/wallclock.json
-
-%files flow-module-accelerometer
-# BSD License
-%{_libdir}/soletta/modules/flow/accelerometer.so
-%{_datadir}/soletta/flow/descriptions/accelerometer.json
+%{_datadir}/soletta/flow/schemas/node-type-genspec.schema
 
 %files flow-module-am2315
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/am2315.so
 %{_datadir}/soletta/flow/descriptions/am2315.json
 
 %files flow-module-calamari
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/calamari.so
 %{_datadir}/soletta/flow/descriptions/calamari.json
 
 %files flow-module-compass
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/compass.so
 %{_datadir}/soletta/flow/descriptions/compass.json
 
 %files flow-module-evdev
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/evdev.so
 %{_datadir}/soletta/flow/descriptions/evdev.json
 
 %files flow-module-file
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/file.so
 %{_datadir}/soletta/flow/descriptions/file.json
 
 %files flow-module-flower-power
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/flower-power.so
 %{_datadir}/soletta/flow/descriptions/flower-power.json
 
 %files flow-module-form
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/form.so
 %{_datadir}/soletta/flow/descriptions/form.json
 
+%files flow-module-format
+# Apache License
+%{_libdir}/soletta/modules/flow/format.so
+%{_datadir}/soletta/flow/descriptions/format.json
+
 %files flow-module-grove
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/grove.so
 %{_datadir}/soletta/flow/descriptions/grove.json
 
 %files flow-module-gtk
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/gtk.so
 %{_datadir}/soletta/flow/descriptions/gtk.json
 
-%files flow-module-gyroscope
-# BSD License
-%{_libdir}/soletta/modules/flow/gyroscope.so
-%{_datadir}/soletta/flow/descriptions/gyroscope.json
-
 %files flow-module-http-client
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/http-client.so
 %{_datadir}/soletta/flow/descriptions/http-client.json
 
-%if 0%{?fedora} > 23
+%if 0%{?fedora} > 24
 %files flow-module-http-server
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/http-server.so
 %{_datadir}/soletta/flow/descriptions/http-server.json
 %endif
 
 %files flow-module-iio
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/iio.so
 %{_datadir}/soletta/flow/descriptions/iio.json
 
 %files flow-module-json
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/json.so
 %{_datadir}/soletta/flow/descriptions/json.json
 
+%files flow-module-jhd1313m1
+# Apache License
+%{_libdir}/soletta/modules/flow/jhd1313m1.so
+%{_datadir}/soletta/flow/descriptions/jhd1313m1.json
+
 %files flow-module-keyboard
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/keyboard.so
 %{_datadir}/soletta/flow/descriptions/keyboard.json
 
 %files flow-module-mqtt
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/mqtt.so
 %{_datadir}/soletta/flow/descriptions/mqtt.json
 
-%if 0%{?fedora} > 23
+%if 0%{?fedora} > 24
 %files flow-module-oauth
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/oauth.so
 %{_datadir}/soletta/flow/descriptions/oauth.json
 %endif
 
 %files flow-module-power-supply
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/power-supply.so
 %{_datadir}/soletta/flow/descriptions/power-supply.json
 
 %files flow-module-led-strip
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/led-strip.so
 %{_datadir}/soletta/flow/descriptions/led-strip.json
 
 %files flow-module-location
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/location.so
 %{_datadir}/soletta/flow/descriptions/location.json
 
-%files flow-module-magnetometer
-# BSD License
-%{_libdir}/soletta/modules/flow/magnetometer.so
-%{_datadir}/soletta/flow/descriptions/magnetometer.json
-
-%files flow-module-max31855
-# BSD License
-%{_libdir}/soletta/modules/flow/max31855.so
-%{_datadir}/soletta/flow/descriptions/max31855.json
-
 %files flow-module-network
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/network.so
 %{_datadir}/soletta/flow/descriptions/network.json
 
 %files flow-module-oic
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/oic.so
 %{_datadir}/soletta/flow/descriptions/oic.json
 
 %files flow-module-persistence
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/persistence.so
 %{_datadir}/soletta/flow/descriptions/persistence.json
 
 %files flow-module-piezo-speaker
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/piezo-speaker.so
 %{_datadir}/soletta/flow/descriptions/piezo-speaker.json
 
 %files flow-module-process
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/process.so
 %{_datadir}/soletta/flow/descriptions/process.json
 
 %files flow-module-servo-motor
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/servo-motor.so
 %{_datadir}/soletta/flow/descriptions/servo-motor.json
 
 %files flow-module-test
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/test.so
 %{_datadir}/soletta/flow/descriptions/test.json
 
 %files flow-module-thingspeak
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/thingspeak.so
 %{_datadir}/soletta/flow/descriptions/thingspeak.json
 
 %files flow-module-udev
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/udev.so
 %{_datadir}/soletta/flow/descriptions/udev.json
 
 %files flow-module-unix-socket
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/unix-socket.so
 %{_datadir}/soletta/flow/descriptions/unix-socket.json
 
 %files flow-module-update
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow/update.so
 %{_datadir}/soletta/flow/descriptions/update.json
 
 %files flow-metatype-module-js
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/flow-metatype/js.so
 
+%files flow-metatype-module-http-composed-client
+# Apache License
+%{_libdir}/soletta/modules/flow-metatype/http-composed-client.so
+
+%if 0%{?fedora} > 24
+%files flow-metatype-module-http-composed-server
+# Apache License
+%{_libdir}/soletta/modules/flow-metatype/http-composed-server.so
+%endif
+
 %files pin-mux-module-galileo
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/pin-mux/intel-galileo-rev-d.so
 %{_libdir}/soletta/modules/pin-mux/intel-galileo-rev-g.so
 
 %files pin-mux-module-edison
-# BSD License
+# Apache License
 %{_libdir}/soletta/modules/pin-mux/intel-edison-rev-c.so
 
 # TODO: should we generate man pages from doxygen tags?
@@ -719,6 +730,61 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 # %%doc %%{_mandir}/man3/*
 
 %changelog
+* Wed Aug 03 2016 Gustavo Lima Chaves <gustavo.lima.chaves@intel.com> - 1-1
+- mavlink support added
+- 100% C API covered by docs
+- many IIO node types added
+- Reviewed structs for holes and checks for struct versions on exposed API
+- Update and fix all board samples (Minnow, Edison and Galileo)
+- Some fixes on I/O implementations
+- Improvement on sockets API
+- Added many IIO node samples
+- Light sensor category added to Linux IIO
+- Added support to STTS751 temperature sensor
+- Basic infrastructure added for Node.js bindings
+- LWM2M protocol support added
+- Support I/O on Zephyr OS
+- Increased amount of node types supported by GTK (simulation)
+- Reduced memory consumption by CoAP - LWM2M samples are running fine on RIOT
+- Single node support - so it’s possible to have a single node without
+  an associated flow. Useful when you need to access a component, send
+  packets to its input ports manually and be notified when it’s
+  sending packets on its output ports.
+- Fixed pin mux issue when using Edison without the arduino board
+- Fixes on HTTP implementation regarding IPv6
+- Many minor API changes (function / struct names to follow convention)
+- RGB and direction-vector persistence nodes created
+- Tutorial on docs
+- Added support for secure OIC connections using pre shared certs
+- Node.js OIC bindings implemented
+- Fix OIC to deal with cases where IPv4 isn’t enabled
+- Dependencies of samples were fixed
+- Added web inspector to sol-fbp-runner
+- GPIO, AIO, PWM and UART bindings for Node.js
+- Added API to server side events on http-server with samples. It was
+  supported on http-client as well.
+- Many changes on LWM2M API in order to have a more consistent API for
+  all communication protocols
+- Provide node types for a lot of OIC resources data models
+- Changes on CoAP implementation improving memory-efficiency
+- Make OIC device IDs and resource structure compatible with IoTivity 1.1 RC3
+- Add API to discover OIC resources using resource interface
+- Many fixes on OIC generator
+- Make IIO device creation/addressing synchronous
+- Add simple JSON types as HTTP node types
+- Add JS API for SPI, I2C
+- Tons of new tests, samples and fixes
+- LWM2M bootstrap interface implemented
+- Connections management support (sol-netctl)
+- Support HTTPS on http-server
+- Introduced sol-bluetooth and sol-gatt API
+- Support to node type aliases
+- Many samples for Nodejs bindings were merged
+- A couple tools were created to help debugging I/O (sol-aio and sol-gpio)
+- Node types related to robotics were added
+- Lots of changes on C API, leading to a more uniform interface across
+  all different parts (I/O, communication protocols, ...)
+
 * Wed Dec 02 2015 Gustavo Lima Chaves <gustavo.lima.chaves@intel.com> - 0.0.1.beta13-1
 - New nodes were added -- http-client/request, http-client/get-json,
   http-client/create-url, oauth/v1, json/create-array-path,
