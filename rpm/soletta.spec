@@ -51,7 +51,7 @@ BuildRequires: libicu-devel
 # We need libmicrohttpd >= 0.9.47, actually, but v1 went out without
 # this check. Let's build with it only for future (distro) releases,
 # then
-%if 0%{?fedora} > 24
+%if 0%{?fedora} > 26
 BuildRequires: libmicrohttpd-devel
 %endif
 BuildRequires: mosquitto-devel
@@ -173,7 +173,7 @@ types of Soletta, to be combined with the respective server nodes. It
 also provides nodes that fetch arbitrary URL contents and output them
 as either string or blob packets.
 
-%if 0%{?fedora} > 24
+%if 0%{?fedora} > 26
 %package flow-module-http-server
 Summary: HTTP server flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
@@ -231,7 +231,7 @@ This package contains the mqtt flow module for %{name}. The module
 provides a flow node implementing a MQTT client.
 
 # We depend on http-server for the oauth node
-%if 0%{?fedora} > 24
+%if 0%{?fedora} > 26
 %package flow-module-oauth
 Summary: OAuth flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
@@ -388,7 +388,7 @@ This package contains the HTTP-composed-packets flow metatype module
 for %{name}. The module allows creating HTTP client node types using
 composed packets.
 
-%if 0%{?fedora} > 24
+%if 0%{?fedora} > 26
 %package flow-metatype-module-http-composed-server
 Summary: HTTP-composed-packets flow metatype module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
@@ -445,7 +445,7 @@ using %{name}, you will need to install %{name}-devel.
 
 %build
 export LIBDIR=%{_libdir}/
-%if 0%{?fedora} <= 24
+%if 0%{?fedora} <= 26
 # we gotta wait for v2 for this line to be unnecessary -- avoid a
 # broken http-server for now
 sed -i 's/\"atleast-version\": \"0\.9\.43\"/\"atleast-version\": \"0\.9\.47\"/g' ./data/jsons/dependencies.json
@@ -456,7 +456,7 @@ sed -i 's/CONFIG_CFLAGS=\"\"/CONFIG_CFLAGS=\"-g\"/g' .config
 sed -i 's/_SAMPLES=y/_SAMPLES=n/g' .config
 sed -i 's/RPATH=y/RPATH=n/g' .config
 
-%if 0%{?fedora} <= 24
+%if 0%{?fedora} <= 26
 # Don't bother testing http-server (oauth only on samples for now) if
 # we won't build it
 find ./src/test-fbp/ -type f -print0 | xargs -0 grep -l "http-server" | xargs rm
@@ -593,7 +593,7 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %{_libdir}/soletta/modules/flow/http-client.so
 %{_datadir}/soletta/flow/descriptions/http-client.json
 
-%if 0%{?fedora} > 24
+%if 0%{?fedora} > 26
 %files flow-module-http-server
 # Apache License
 %{_libdir}/soletta/modules/flow/http-server.so
@@ -625,7 +625,7 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %{_libdir}/soletta/modules/flow/mqtt.so
 %{_datadir}/soletta/flow/descriptions/mqtt.json
 
-%if 0%{?fedora} > 24
+%if 0%{?fedora} > 26
 %files flow-module-oauth
 # Apache License
 %{_libdir}/soletta/modules/flow/oauth.so
@@ -710,7 +710,7 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 # Apache License
 %{_libdir}/soletta/modules/flow-metatype/http-composed-client.so
 
-%if 0%{?fedora} > 24
+%if 0%{?fedora} > 26
 %files flow-metatype-module-http-composed-server
 # Apache License
 %{_libdir}/soletta/modules/flow-metatype/http-composed-server.so
