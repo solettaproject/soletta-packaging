@@ -486,6 +486,8 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %dir %{_datadir}/soletta/
 %dir %{_datadir}/soletta/boards
 %{_datadir}/soletta/boards/50-default.json
+%dir %{_datadir}/soletta/flow/aliases
+%{_datadir}/soletta/flow/aliases/50-default.json
 %dir %{_libdir}/soletta/
 %dir %{_libdir}/soletta/modules/
 %dir %{_libdir}/soletta/modules/flow/
@@ -511,7 +513,7 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %{_includedir}/soletta/
 %{_datadir}/gdb/auto-load/*
 %{_libdir}/pkgconfig/soletta.pc
-%{_datadir}/soletta/flow/aliases/50-default.json
+%dir %{_datadir}/soletta/flow/descriptions
 %{_datadir}/soletta/flow/descriptions/aio.json
 %{_datadir}/soletta/flow/descriptions/app.json
 %{_datadir}/soletta/flow/descriptions/boolean.json
@@ -536,6 +538,7 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %{_datadir}/soletta/flow/descriptions/timestamp.json
 %{_datadir}/soletta/flow/descriptions/trigonometry.json
 %{_datadir}/soletta/flow/descriptions/wallclock.json
+%dir %{_datadir}/soletta/flow/schemas
 %{_datadir}/soletta/flow/schemas/node-type-genspec.schema
 
 %files flow-module-am2315
@@ -732,58 +735,33 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %changelog
 * Wed Aug 03 2016 Gustavo Lima Chaves <gustavo.lima.chaves@intel.com> - 1-1
 - mavlink support added
-- 100% C API covered by docs
 - many IIO node types added
-- Reviewed structs for holes and checks for struct versions on exposed API
-- Update and fix all board samples (Minnow, Edison and Galileo)
 - Some fixes on I/O implementations
 - Improvement on sockets API
-- Added many IIO node samples
 - Light sensor category added to Linux IIO
 - Added support to STTS751 temperature sensor
-- Basic infrastructure added for Node.js bindings
 - LWM2M protocol support added
-- Support I/O on Zephyr OS
 - Increased amount of node types supported by GTK (simulation)
 - Reduced memory consumption by CoAP - LWM2M samples are running fine on RIOT
 - Single node support - so it’s possible to have a single node without
   an associated flow. Useful when you need to access a component, send
   packets to its input ports manually and be notified when it’s
   sending packets on its output ports.
-- Fixed pin mux issue when using Edison without the arduino board
 - Fixes on HTTP implementation regarding IPv6
-- Many minor API changes (function / struct names to follow convention)
 - RGB and direction-vector persistence nodes created
-- Tutorial on docs
 - Added support for secure OIC connections using pre shared certs
-- Node.js OIC bindings implemented
-- Fix OIC to deal with cases where IPv4 isn’t enabled
-- Dependencies of samples were fixed
 - Added web inspector to sol-fbp-runner
-- GPIO, AIO, PWM and UART bindings for Node.js
 - Added API to server side events on http-server with samples. It was
   supported on http-client as well.
-- Many changes on LWM2M API in order to have a more consistent API for
-  all communication protocols
 - Provide node types for a lot of OIC resources data models
-- Changes on CoAP implementation improving memory-efficiency
 - Make OIC device IDs and resource structure compatible with IoTivity 1.1 RC3
-- Add API to discover OIC resources using resource interface
-- Many fixes on OIC generator
-- Make IIO device creation/addressing synchronous
 - Add simple JSON types as HTTP node types
-- Add JS API for SPI, I2C
-- Tons of new tests, samples and fixes
 - LWM2M bootstrap interface implemented
 - Connections management support (sol-netctl)
-- Support HTTPS on http-server
 - Introduced sol-bluetooth and sol-gatt API
 - Support to node type aliases
-- Many samples for Nodejs bindings were merged
 - A couple tools were created to help debugging I/O (sol-aio and sol-gpio)
 - Node types related to robotics were added
-- Lots of changes on C API, leading to a more uniform interface across
-  all different parts (I/O, communication protocols, ...)
 
 * Wed Dec 02 2015 Gustavo Lima Chaves <gustavo.lima.chaves@intel.com> - 0.0.1.beta13-1
 - New nodes were added -- http-client/request, http-client/get-json,
@@ -791,40 +769,21 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
   json/create-object-path, power-supply/get-list,
   power-supply/get-capacity, power-supply/get-info, mqtt/client,
   update/check, update/fetch, update/install.
-- HTTP module now supports more HTTP methods
 - HTTP server node was removed from the package on Fedora 23, since it
   demands a much newer version of libmicrohttpd than Fedora provides
   (and will ever provide at least on Fedora 23, since systemd also
   depends on it and newer versions change the soname).
 - A new packet types was added -- HTTP response.
-- The float/int option types were changed -- we now have float/int for
-  single numbers of those types and float_spec/int_spec for ranges of
-  those types.
-- Minor bugfixes of the following modules got in: HTTP, flow, int
-  node, build system, memmap-storage, OIC, socket abstraction, random
-  numbers engine, CoAP, json node, platform, general use buffer,
-  message digest, FBP generator, RIOT I/O, timer node.
-- The file sol-pin-mux.h is now installed, as it should be.
 - Board pins can now be addressed by a string label, if backed-up by
   their pin-mux modules.
-- Thread-safety was added to the RIOT build. Worker threads were
-  added to it too. Finally, a crypto backend was added to that system
-  too.
 - The form family of nodes got a handful of other nodes included:
   form/int, form/int-custom, form/string.
-- The linux-micro module got gdb-server support, to be used to debug
-  Soletta when running as PID1. It also got two new modules: kmod and
-  automount.
-- The persistence module was changed to an asynchronous implementation.
 - OIC client nodes got a new SCAN port, meant to request scanning of
   all servers matching the client interface. A new DEVICE_ID output
   port was also added, that will dispatch the found IDs in that
   scanning request.
-- The dummy platform implementation was removed.
 - The platform modules got a new mount points manipulation API, as
   well as a uevent listening one (for Linux).
-- All of our public API with ambiguous int sizes were made explicity
-  with regards to size (e.g. int32_t).
 - An API exposing power supply properties was added to Soletta.
 - An API dealing with certificates was added to Soletta.
 - MQTT in Soletta got TLS connections support.
@@ -843,11 +802,7 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 - and/or logic nodes now accept multiple (up to 32) input connections
 - The int module nodes now send new output packets on input changes
 - Multicast packets are now sent to all machine interfaces
-- The HTTP server node got some fixes, like recognizing more header fields
-- The float/map node got a fix that led to bad conversions on ARM machines
 - The form module got a new node: the boolean form.
-- Legacy tool sol-flow-node types is now gone.
-- file/writer node got some bad data access errors fixed.
 
 * Tue Oct 20 2015 Gustavo Lima Chaves <gustavo.lima.chaves@intel.com> - 0.0.1.beta8-1
 - first rpm build
