@@ -15,7 +15,7 @@
 Summary: A framework for making IoT devices
 Name: soletta
 Version: %{soletta_version}
-Release: 1%{?dist}
+Release: 2%{?dist}
 # Apache License (ASL):
 #       data/*
 #       doc/*
@@ -733,6 +733,9 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 # %%doc %%{_mandir}/man3/*
 
 %changelog
+* Mon Dec 19 2016 Miro Hrončok <mhroncok@redhat.com> - 1-2
+- Rebuild for Python 3.6
+
 * Wed Aug 03 2016 Gustavo Lima Chaves <gustavo.lima.chaves@intel.com> - 1-1
 - mavlink support added
 - many IIO node types added
