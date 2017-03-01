@@ -1,5 +1,5 @@
-%global soletta_version 1
-%global soletta_current 1
+%global soletta_version 2
+%global soletta_current %{soletta_version}
 %global soletta_revision 0
 %global soletta_age 0
 
@@ -9,13 +9,13 @@
 
 %global soletta_duktape_version 1.4.0
 %global soletta_mavlink_version 1.0.11
-%global soletta_tinycbor_version 0.2
+%global soletta_tinycbor_version 0.4
 %global soletta_tinydtls_version 0.8.1
 
 Summary: A framework for making IoT devices
 Name: soletta
 Version: %{soletta_version}
-Release: 3%{?dist}
+Release: 1%{?dist}
 # Apache License (ASL):
 #       data/*
 #       doc/*
@@ -40,7 +40,7 @@ Release: 3%{?dist}
 #       src/modules/flow/string/string-replace-icu.c
 License: ASL 2.0 and BSD and MIT and LGPLv2+ and GPLv2+ and Python
 URL: http://github.com/solettaproject/soletta
-Source0: https://github.com/solettaproject/%{name}/releases/download/v1/%{name}.tar.gz
+Source0: https://github.com/solettaproject/%{name}/archive/v2_rc1.zip
 Provides: bundled(duktape) = %{soletta_duktape_version}
 Provides: bundled(mavlink) = %{soletta_mavlink_version}
 Provides: bundled(tinycbor) = %{soletta_tinycbor_version}
@@ -51,7 +51,7 @@ BuildRequires: libicu-devel
 # We need libmicrohttpd >= 0.9.47, actually, but v1 went out without
 # this check. Let's build with it only for future (distro) releases,
 # then
-%if 0%{?fedora} > 26
+%if 0%{?fedora} > 25
 BuildRequires: libmicrohttpd-devel
 %endif
 BuildRequires: mosquitto-devel
@@ -59,6 +59,7 @@ BuildRequires: pcre-devel
 BuildRequires: systemd-devel
 BuildRequires: python3 >= 3.4
 BuildRequires: python3-jsonschema
+BuildRequires: connman-devel
 
 %description
 Soletta project is a framework for making IoT devices. With Soletta
@@ -173,7 +174,7 @@ types of Soletta, to be combined with the respective server nodes. It
 also provides nodes that fetch arbitrary URL contents and output them
 as either string or blob packets.
 
-%if 0%{?fedora} > 26
+%if 0%{?fedora} > 25
 %package flow-module-http-server
 Summary: HTTP server flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
@@ -231,7 +232,7 @@ This package contains the mqtt flow module for %{name}. The module
 provides a flow node implementing a MQTT client.
 
 # We depend on http-server for the oauth node
-%if 0%{?fedora} > 26
+%if 0%{?fedora} > 25
 %package flow-module-oauth
 Summary: OAuth flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
@@ -267,6 +268,18 @@ This package contains the location flow module for %{name}. The module
 provides flow nodes interfacing with the free FreeGeoip service, to
 obtain the location of either a given IP address or the originating
 address.
+
+%package flow-module-netctl
+Summary: Netctl (network control) flow module for %{name}
+Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: connman
+
+%description flow-module-netctl
+This package contains the network control flow module for %{name}. The
+module provides a flow node to control the status of network
+connectivity on the platform (Connman-only implementation for Linux,
+now). It will turn on the global network status to online/offline,
+connect/disconnect to specifif network access points, etc.
 
 %package flow-module-network
 Summary: Network flow module for %{name}
@@ -388,7 +401,7 @@ This package contains the HTTP-composed-packets flow metatype module
 for %{name}. The module allows creating HTTP client node types using
 composed packets.
 
-%if 0%{?fedora} > 26
+%if 0%{?fedora} > 25
 %package flow-metatype-module-http-composed-server
 Summary: HTTP-composed-packets flow metatype module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
@@ -445,18 +458,13 @@ using %{name}, you will need to install %{name}-devel.
 
 %build
 export LIBDIR=%{_libdir}/
-%if 0%{?fedora} <= 26
-# we gotta wait for v2 for this line to be unnecessary -- avoid a
-# broken http-server for now
-sed -i 's/\"atleast-version\": \"0\.9\.43\"/\"atleast-version\": \"0\.9\.47\"/g' ./data/jsons/dependencies.json
-%endif
 
 make alldefconfig
 sed -i 's/CONFIG_CFLAGS=\"\"/CONFIG_CFLAGS=\"-g\"/g' .config
-sed -i 's/_SAMPLES=y/_SAMPLES=n/g' .config
+sed -i 's/^SAMPLES=y/SAMPLES=n/g' .config
 sed -i 's/RPATH=y/RPATH=n/g' .config
 
-%if 0%{?fedora} <= 26
+%if 0%{?fedora} <= 25
 # Don't bother testing http-server (oauth only on samples for now) if
 # we won't build it
 find ./src/test-fbp/ -type f -print0 | xargs -0 grep -l "http-server" | xargs rm
@@ -596,7 +604,7 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %{_libdir}/soletta/modules/flow/http-client.so
 %{_datadir}/soletta/flow/descriptions/http-client.json
 
-%if 0%{?fedora} > 26
+%if 0%{?fedora} > 25
 %files flow-module-http-server
 # Apache License
 %{_libdir}/soletta/modules/flow/http-server.so
@@ -628,7 +636,7 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %{_libdir}/soletta/modules/flow/mqtt.so
 %{_datadir}/soletta/flow/descriptions/mqtt.json
 
-%if 0%{?fedora} > 26
+%if 0%{?fedora} > 25
 %files flow-module-oauth
 # Apache License
 %{_libdir}/soletta/modules/flow/oauth.so
@@ -713,7 +721,7 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 # Apache License
 %{_libdir}/soletta/modules/flow-metatype/http-composed-client.so
 
-%if 0%{?fedora} > 26
+%if 0%{?fedora} > 25
 %files flow-metatype-module-http-composed-server
 # Apache License
 %{_libdir}/soletta/modules/flow-metatype/http-composed-server.so
@@ -733,6 +741,26 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 # %%doc %%{_mandir}/man3/*
 
 %changelog
+* Wed Mar 01 2017 Gustavo Lima Chaves <gustavo.lima.chaves@intel.com> - 2-1
+- New netctl flow node added (as module), as well as agent API for
+  that infrastructure
+- Complete overhaul of LWM2M API & implementation, now with: access
+  control objects support, authorization, UDP channel security (via
+  DTLS)--with simmetric or asymmetric keys--, Raw Public Key, etc. The
+  API was split into multiple files (mostry client/server separation),
+  and many bugs in that code were fixed.
+- MQTT module got a fix for when connecting to a broker failed
+- IIO: fix for when devices were not activated before reads take
+  place, support for IIO mount matrix, support for sampling frequency
+  to channel level, support for hrtimer-based trigger, support for
+  multi-channel reading on devices, new C-API to read configuration
+  attributes including scale, offset and sampling frequency, support
+  for wildcards on IIO paths and other minor issues.
+- libmicrohttpd: the minimum required version was wrong, now fixed to
+  0.9.47
+- libmosquitto: the minimum required version was wrong, now fixed to
+  "1004002"
+
 * Sat Feb 11 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
