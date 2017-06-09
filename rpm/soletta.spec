@@ -40,7 +40,7 @@ Release: 1%{?dist}
 #       src/modules/flow/string/string-replace-icu.c
 License: ASL 2.0 and BSD and MIT and LGPLv2+ and GPLv2+ and Python
 URL: http://github.com/solettaproject/soletta
-Source0: https://github.com/solettaproject/%{name}/archive/v2_rc1.zip
+Source0: https://github.com/solettaproject/%{name}/archive/v%{soletta_version}_rc1.tar.gz
 Provides: bundled(duktape) = %{soletta_duktape_version}
 Provides: bundled(mavlink) = %{soletta_mavlink_version}
 Provides: bundled(tinycbor) = %{soletta_tinycbor_version}
@@ -454,7 +454,7 @@ using %{name}, you will need to install %{name}-devel.
 # This package contains the development documentation for %%{name}.
 
 %prep
-%setup -qn %{name}
+%setup -qn %{name}-%{soletta_version}_rc1
 
 %build
 export LIBDIR=%{_libdir}/
@@ -465,8 +465,7 @@ sed -i 's/^SAMPLES=y/SAMPLES=n/g' .config
 sed -i 's/RPATH=y/RPATH=n/g' .config
 
 %if 0%{?fedora} <= 25
-# Don't bother testing http-server (oauth only on samples for now) if
-# we won't build it
+# Don't bother testing http-server if we won't build it
 find ./src/test-fbp/ -type f -print0 | xargs -0 grep -l "http-server" | xargs rm
 # javascript.fbp will go away with the line above, so...
 sed -i '/tests-fbp-bin += $(top_srcdir)src\/test-fbp\/javascript\.fbp/d' ./tools/build/Makefile.vars
