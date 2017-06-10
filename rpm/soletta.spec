@@ -40,7 +40,10 @@ Release: 1%{?dist}
 #       src/modules/flow/string/string-replace-icu.c
 License: ASL 2.0 and BSD and MIT and LGPLv2+ and GPLv2+ and Python
 URL: http://github.com/solettaproject/soletta
-Source0: https://github.com/solettaproject/%{name}/archive/v%{soletta_version}_rc1.tar.gz
+# On each release, please remember to attach a git archive of the repo
+# *with all submodules in it*, so that thirdparty code gets added
+# (auto archives by Github don't get them)
+Source0: https://github.com/solettaproject/%{name}/releases/download/v2_rc1/%{name}.tar.gz
 Provides: bundled(duktape) = %{soletta_duktape_version}
 Provides: bundled(mavlink) = %{soletta_mavlink_version}
 Provides: bundled(tinycbor) = %{soletta_tinycbor_version}
@@ -48,12 +51,7 @@ Provides: bundled(tinydtls) = %{soletta_tinydtls_version}
 BuildRequires: gtk3-devel
 BuildRequires: libcurl-devel
 BuildRequires: libicu-devel
-# We need libmicrohttpd >= 0.9.47, actually, but v1 went out without
-# this check. Let's build with it only for future (distro) releases,
-# then
-%if 0%{?fedora} > 25
 BuildRequires: libmicrohttpd-devel
-%endif
 BuildRequires: mosquitto-devel
 BuildRequires: pcre-devel
 BuildRequires: systemd-devel
@@ -174,7 +172,6 @@ types of Soletta, to be combined with the respective server nodes. It
 also provides nodes that fetch arbitrary URL contents and output them
 as either string or blob packets.
 
-%if 0%{?fedora} > 25
 %package flow-module-http-server
 Summary: HTTP server flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
@@ -184,7 +181,6 @@ This package contains the HTTP-server flow module for %{name}. The
 module provides flow nodes that serve the basic packet
 types of Soletta, to be combined with the respective client nodes. It
 also provides a node to serve static files.
-%endif
 
 %package flow-module-iio
 Summary: IIO flow module for %{name}
@@ -232,7 +228,6 @@ This package contains the mqtt flow module for %{name}. The module
 provides a flow node implementing a MQTT client.
 
 # We depend on http-server for the oauth node
-%if 0%{?fedora} > 25
 %package flow-module-oauth
 Summary: OAuth flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
@@ -240,7 +235,6 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 %description flow-module-oauth
 This package contains the oauth flow module for %{name}. The module
 provides a flow nodes to negotiate an OAuth access token.
-%endif
 
 %package flow-module-power-supply
 Summary: Power supply flow module for %{name}
@@ -354,6 +348,15 @@ To use these nodes, one must register and obtain an API key. API keys
 for channels and talkbacks are different. For the talkback feature,
 obtaining a Talkback ID is also required.
 
+%package flow-module-twitter
+Summary: Twitter flow module for %{name}
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description flow-module-twitter
+This package contains the Twitter flow module for %{name}. It provides
+a basic twitter client node, that allows one to post tweets and get
+their own timeline text.
+
 %package flow-module-udev
 Summary: Udev flow module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
@@ -401,7 +404,6 @@ This package contains the HTTP-composed-packets flow metatype module
 for %{name}. The module allows creating HTTP client node types using
 composed packets.
 
-%if 0%{?fedora} > 25
 %package flow-metatype-module-http-composed-server
 Summary: HTTP-composed-packets flow metatype module for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
@@ -410,7 +412,6 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 This package contains the HTTP-composed-packets flow metatype module
 for %{name}. The module allows creating HTTP server node types using
 composed packets.
-%endif
 
 %package pin-mux-module-galileo
 Summary: Galileo pin-mux module for %{name}
@@ -454,7 +455,7 @@ using %{name}, you will need to install %{name}-devel.
 # This package contains the development documentation for %%{name}.
 
 %prep
-%setup -qn %{name}-%{soletta_version}_rc1
+%setup -qn %{name}
 
 %build
 export LIBDIR=%{_libdir}/
@@ -464,12 +465,6 @@ sed -i 's/CONFIG_CFLAGS=\"\"/CONFIG_CFLAGS=\"-g\"/g' .config
 sed -i 's/^SAMPLES=y/SAMPLES=n/g' .config
 sed -i 's/RPATH=y/RPATH=n/g' .config
 
-%if 0%{?fedora} <= 25
-# Don't bother testing http-server if we won't build it
-find ./src/test-fbp/ -type f -print0 | xargs -0 grep -l "http-server" | xargs rm
-# javascript.fbp will go away with the line above, so...
-sed -i '/tests-fbp-bin += $(top_srcdir)src\/test-fbp\/javascript\.fbp/d' ./tools/build/Makefile.vars
-%endif
 make V=1 CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mflags}
 
 %install
@@ -521,8 +516,13 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %{_datadir}/gdb/auto-load/*
 %{_libdir}/pkgconfig/soletta.pc
 %dir %{_datadir}/soletta/flow/descriptions
+%{_datadir}/soletta/flow/descriptions/http-server.json
+%{_datadir}/soletta/flow/descriptions/netctl.json
+%{_datadir}/soletta/flow/descriptions/oauth.json
+%{_datadir}/soletta/flow/descriptions/twitter.json
 %{_datadir}/soletta/flow/descriptions/aio.json
 %{_datadir}/soletta/flow/descriptions/app.json
+%{_datadir}/soletta/flow/descriptions/arctangent.json
 %{_datadir}/soletta/flow/descriptions/boolean.json
 %{_datadir}/soletta/flow/descriptions/byte.json
 %{_datadir}/soletta/flow/descriptions/color.json
@@ -545,6 +545,10 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %{_datadir}/soletta/flow/descriptions/timestamp.json
 %{_datadir}/soletta/flow/descriptions/trigonometry.json
 %{_datadir}/soletta/flow/descriptions/wallclock.json
+%dir %{_datadir}/soletta/web-inspector
+%{_datadir}/soletta/web-inspector/web-inspector.css
+%{_datadir}/soletta/web-inspector/web-inspector.html
+%{_datadir}/soletta/web-inspector/web-inspector.js
 %dir %{_datadir}/soletta/flow/schemas
 %{_datadir}/soletta/flow/schemas/node-type-genspec.schema
 
@@ -603,12 +607,10 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %{_libdir}/soletta/modules/flow/http-client.so
 %{_datadir}/soletta/flow/descriptions/http-client.json
 
-%if 0%{?fedora} > 25
 %files flow-module-http-server
 # Apache License
 %{_libdir}/soletta/modules/flow/http-server.so
 %{_datadir}/soletta/flow/descriptions/http-server.json
-%endif
 
 %files flow-module-iio
 # Apache License
@@ -635,12 +637,15 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %{_libdir}/soletta/modules/flow/mqtt.so
 %{_datadir}/soletta/flow/descriptions/mqtt.json
 
-%if 0%{?fedora} > 25
+%files flow-module-netctl
+# Apache License
+%{_libdir}/soletta/modules/flow/netctl.so
+%{_datadir}/soletta/flow/descriptions/netctl.json
+
 %files flow-module-oauth
 # Apache License
 %{_libdir}/soletta/modules/flow/oauth.so
 %{_datadir}/soletta/flow/descriptions/oauth.json
-%endif
 
 %files flow-module-power-supply
 # Apache License
@@ -697,6 +702,11 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 %{_libdir}/soletta/modules/flow/thingspeak.so
 %{_datadir}/soletta/flow/descriptions/thingspeak.json
 
+%files flow-module-twitter
+# Apache License
+%{_libdir}/soletta/modules/flow/twitter.so
+%{_datadir}/soletta/flow/descriptions/twitter.json
+
 %files flow-module-udev
 # Apache License
 %{_libdir}/soletta/modules/flow/udev.so
@@ -720,11 +730,9 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 # Apache License
 %{_libdir}/soletta/modules/flow-metatype/http-composed-client.so
 
-%if 0%{?fedora} > 25
 %files flow-metatype-module-http-composed-server
 # Apache License
 %{_libdir}/soletta/modules/flow-metatype/http-composed-server.so
-%endif
 
 %files pin-mux-module-galileo
 # Apache License
@@ -741,6 +749,7 @@ make CFLAGS="$CFLAGS %optflags" LDFLAGS="$LDFLAGS %__global_ldflags" %{?_smp_mfl
 
 %changelog
 * Wed Mar 01 2017 Gustavo Lima Chaves <gustavo.lima.chaves@intel.com> - 2-1
+- New twitter node added
 - New netctl flow node added (as module), as well as agent API for
   that infrastructure
 - Complete overhaul of LWM2M API & implementation, now with: access
